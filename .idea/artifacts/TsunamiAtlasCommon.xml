@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="TsunamiAtlasCommon">
+    <output-path>$PROJECT_DIR$/out/artifacts/TsunamiAtlasCommon</output-path>
+    <root id="root">
+      <element id="archive" name="TsunamiAtlasCommon.jar">
+        <element id="module-output" name="TsunamiAtlasCommon" />
+      </element>
+    </root>
+  </artifact>
+</component>

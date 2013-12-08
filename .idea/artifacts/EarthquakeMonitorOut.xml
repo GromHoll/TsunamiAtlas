@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact name="EarthquakeMonitorOut">
+    <output-path>$PROJECT_DIR$/out/artifacts/EarthquakeMonitorOut</output-path>
+    <root id="root">
+      <element id="artifact" artifact-name="EarthquakeMonitor" />
+      <element id="directory" name="lib">
+        <element id="library" level="project" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" />
+        <element id="library" level="project" name="Maven: org.hamcrest:hamcrest-core:1.1" />
+        <element id="artifact" artifact-name="TsunamiAtlasCommon" />
+      </element>
+      <element id="directory" name="config">
+        <element id="file-copy" path="$PROJECT_DIR$/EarthquakeMonitor/src/main/resources/edu.atlas.earthquake/config/global.config" />
+        <element id="file-copy" path="$PROJECT_DIR$/EarthquakeMonitor/src/main/resources/edu.atlas.earthquake/config/validator.config" />
+        <element id="file-copy" path="$PROJECT_DIR$/EarthquakeMonitor/src/main/resources/edu.atlas.earthquake/config/outFormat.config" />
+      </element>
+      <element id="file-copy" path="$PROJECT_DIR$/EarthquakeMonitor/src/main/resources/edu.atlas.earthquake/script/run.bat" />
+      <element id="file-copy" path="$PROJECT_DIR$/EarthquakeMonitor/src/main/resources/edu.atlas.earthquake/script/run.sh" />
+    </root>
+  </artifact>
+</component>

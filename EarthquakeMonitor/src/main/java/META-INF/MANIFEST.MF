@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: ./lib/TsunamiAtlasCommon.jar ./lib/json-simple-1.1.1.jar .
+ /lib/hamcrest-core-1.1.jar
+Main-Class: edu.atlas.earthquake.Entry
+
