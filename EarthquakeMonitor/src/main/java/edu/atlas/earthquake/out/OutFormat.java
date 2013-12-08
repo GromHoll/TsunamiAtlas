@@ -29,8 +29,8 @@ public class OutFormat {
 
     private List<OutNode> parseLines(String[] lines) {
         List<OutNode> format = new ArrayList<>();
-        for (int i = 0; i < lines.length; i++) {
-            format.addAll(parseSingleLine(lines[i]));
+        for (String line : lines) {
+            format.addAll(parseSingleLine(line));
         }
         format.remove(format.size() - 1);
         return format;
