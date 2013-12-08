@@ -25,7 +25,7 @@ public class ConsoleMonitor<T> implements ServerListener, DataWriter<T> {
     @Override
     public void output(List<T> list) {
         for (T value : list) {
-            System.out.print("Added : " + value.toString());
+            System.out.println("Added : " + value.toString());
         }
     }
 }
