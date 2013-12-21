@@ -1,10 +1,14 @@
-package edu.atlas.earthquake.out;
+package edu.atlas.earthquake.out.format;
 
 import edu.atlas.common.data.impl.FileReader;
+import edu.atlas.earthquake.entity.Earthquake;
+import edu.atlas.earthquake.out.format.node.EarthquakeOutNode;
+import edu.atlas.earthquake.out.format.node.NewLineOutNode;
+import edu.atlas.earthquake.out.format.node.OutNode;
+import edu.atlas.earthquake.out.format.node.StringOutNode;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,13 +16,22 @@ public class OutFormat {
 
     public static final String SPLIT_SYMBOL = "%";
     public static final String COMMENT_SYMBOL = "#";
-    private FileReader reader;
+    private List<OutNode> format;
 
     public OutFormat(String filename) {
-        reader = new FileReader(filename);
+        format = createFormat(filename);
     }
 
-    public List<OutNode> createFormat() {
+    public String getFormattedText(Earthquake earthquake) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (OutNode outNode : format) {
+            stringBuilder.append(outNode.getOut(earthquake));
+        }
+        return stringBuilder.toString();
+    }
+
+    private List<OutNode> createFormat(String filename) {
+        FileReader reader = new FileReader(filename);
         try {
             return parseLines(reader.getData());
         } catch (IOException exc) {
@@ -64,7 +77,7 @@ public class OutFormat {
         }
     }
 
-    public List<OutNode> getDefaultOutFormat() {
+    private List<OutNode> getDefaultOutFormat() {
         List<OutNode> format = new ArrayList<>();
         format.add(new EarthquakeOutNode(EarthquakeOutNode.DEFAULT));
         return format;

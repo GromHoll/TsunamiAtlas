@@ -1,8 +1,6 @@
-package edu.atlas.earthquake.out;
+package edu.atlas.earthquake.out.format.node;
 
 import edu.atlas.earthquake.entity.Earthquake;
-
-import java.util.Date;
 
 public class EarthquakeOutNode implements OutNode {
 

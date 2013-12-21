@@ -1,19 +1,21 @@
 package edu.atlas.earthquake;
 
 import edu.atlas.common.data.ConfigLoader;
-import edu.atlas.common.data.DataReader;
 import edu.atlas.common.data.DataParser;
-import edu.atlas.common.data.DataWriter;
-import edu.atlas.common.data.impl.FileReader;
+import edu.atlas.common.data.DataReader;
+import edu.atlas.common.data.DataChangedListener;
+import edu.atlas.common.data.event.DataChangedEvent;
 import edu.atlas.common.data.impl.UrlDataReader;
 import edu.atlas.common.listener.ServerListener;
+import edu.atlas.earthquake.config.GlobalConfigConstants;
+import edu.atlas.earthquake.config.ValidatorConfigConstants;
 import edu.atlas.earthquake.data.EarthquakeGeoJsonParser;
 import edu.atlas.earthquake.entity.Earthquake;
 import edu.atlas.earthquake.gui.ConsoleMonitor;
 import edu.atlas.earthquake.gui.EarthquakeMonitorFrame;
-import edu.atlas.earthquake.out.*;
+import edu.atlas.earthquake.out.EarthquakeFileWriter;
+import edu.atlas.earthquake.out.format.OutFormat;
 import edu.atlas.earthquake.validator.Validator;
-import edu.atlas.earthquake.validator.ValidatorConfigConstants;
 
 import java.io.IOException;
 import java.util.*;
@@ -42,10 +44,10 @@ public class EarthquakeController extends Thread {
 
     private Validator validator;
 
-    private Set<Earthquake> earthquakeSet = new HashSet<>();
+    private List<Earthquake> allEarthquake = new ArrayList<>();
 
     private List<ServerListener> serverListeners = new LinkedList<>();
-    private List<DataWriter<Earthquake>> earthquakeOutputs = new LinkedList<>();
+    private List<DataChangedListener<Earthquake>> dataChangedListeners = new LinkedList<>();
 
     public EarthquakeController() {
         loadGlobalConfiguration();
@@ -53,20 +55,19 @@ public class EarthquakeController extends Thread {
         if (consoleAvailable) {
             ConsoleMonitor<Earthquake> consoleMonitor = new ConsoleMonitor<>();
             serverListeners.add(consoleMonitor);
-            earthquakeOutputs.add(consoleMonitor);
+            dataChangedListeners.add(consoleMonitor);
         }
 
         if (guiAvailable) {
             EarthquakeMonitorFrame monitorFrame = new EarthquakeMonitorFrame(GlobalConfigConstants.FRAME_NAME);
             serverListeners.add(monitorFrame);
-            earthquakeOutputs.add(monitorFrame);
+            dataChangedListeners.add(monitorFrame);
         }
 
         if (fileAvailable) {
             OutFormat outFormat = new OutFormat(OUT_FORMAT_CONFIG_PATH);
-            List<OutNode> format = outFormat.createFormat();
-            DataWriter<Earthquake> earthquakeDataWriter = new EarthquakeFileWriter(fileOutPath, format);
-            earthquakeOutputs.add(earthquakeDataWriter);
+            DataChangedListener<Earthquake> earthquakeDataChangedListener = new EarthquakeFileWriter(fileOutPath, outFormat);
+            dataChangedListeners.add(earthquakeDataChangedListener);
         }
 
         dataReader = new UrlDataReader(dataUrl);
@@ -153,25 +154,34 @@ public class EarthquakeController extends Thread {
         }
     }
 
-    private void processEarthquakes(List<Earthquake> earthquakes) {
-        validateEarthquakes(earthquakes);
-        earthquakeSet.addAll(earthquakes);
-        notifyOutputs();
+    private void processEarthquakes(List<Earthquake> beforeProcess) {
+        List<Earthquake> afterValidation = validateEarthquakes(beforeProcess);
+
+        List<Earthquake> newEarthquake = new ArrayList<>(afterValidation);
+        newEarthquake.retainAll(allEarthquake);
+
+        List<Earthquake> changedEarthquake = new ArrayList<>(afterValidation);
+        changedEarthquake.removeAll(allEarthquake);
+
+        allEarthquake.addAll(newEarthquake);
+
+        notifyOutputs(new DataChangedEvent<>(allEarthquake, changedEarthquake, newEarthquake));
     }
 
-    private void validateEarthquakes(List<Earthquake> earthquakes) {
-        Iterator<Earthquake> it = earthquakes.iterator();
+    private List<Earthquake> validateEarthquakes(List<Earthquake> earthquakes) {
+        List<Earthquake> result = new ArrayList<>(earthquakes);
+        Iterator<Earthquake> it = result.iterator();
         while (it.hasNext()) {
             if (!validator.validate(it.next())) {
                 it.remove();
             }
         }
+        return result;
     }
 
-    private void notifyOutputs() {
-        List<Earthquake> earthquakes = new ArrayList<>(earthquakeSet);
-        for(DataWriter<Earthquake> eqo : earthquakeOutputs) {
-            eqo.output(earthquakes);
+    private void notifyOutputs(DataChangedEvent<Earthquake> event) {
+        for(DataChangedListener<Earthquake> eqo : dataChangedListeners) {
+            eqo.process(event);
         }
     }
 

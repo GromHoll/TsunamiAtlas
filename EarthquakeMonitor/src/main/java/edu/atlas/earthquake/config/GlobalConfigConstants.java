@@ -1,4 +1,4 @@
-package edu.atlas.earthquake;
+package edu.atlas.earthquake.config;
 
 public class GlobalConfigConstants {
 

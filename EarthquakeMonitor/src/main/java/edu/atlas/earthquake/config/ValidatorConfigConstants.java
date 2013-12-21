@@ -1,4 +1,4 @@
-package edu.atlas.earthquake.validator;
+package edu.atlas.earthquake.config;
 
 public class ValidatorConfigConstants {
 

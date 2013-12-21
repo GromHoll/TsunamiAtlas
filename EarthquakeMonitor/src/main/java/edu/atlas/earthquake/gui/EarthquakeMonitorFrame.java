@@ -1,14 +1,14 @@
 package edu.atlas.earthquake.gui;
 
-import edu.atlas.common.data.DataWriter;
+import edu.atlas.common.data.DataChangedListener;
+import edu.atlas.common.data.event.DataChangedEvent;
 import edu.atlas.common.listener.ServerListener;
 import edu.atlas.earthquake.entity.Earthquake;
 
 import javax.swing.*;
 import java.util.Date;
-import java.util.List;
 
-public class EarthquakeMonitorFrame extends JFrame implements DataWriter<Earthquake>, ServerListener {
+public class EarthquakeMonitorFrame extends JFrame implements DataChangedListener<Earthquake>, ServerListener {
 
     public static final String AVAILABLE = "Available";
     public static final String NOT_AVAILABLE = "Not available";
@@ -67,8 +67,8 @@ public class EarthquakeMonitorFrame extends JFrame implements DataWriter<Earthqu
     }
 
     @Override
-    public void output(List<Earthquake> list) {
+    public void process(DataChangedEvent<Earthquake> event) {
         lastUpdateLabel.setText(new Date().toString());
-        tableModel.setData(list);
+        tableModel.setData(event.getAllData());
     }
 }
