@@ -14,6 +14,7 @@ import edu.atlas.earthquake.entity.Earthquake;
 import edu.atlas.earthquake.gui.ConsoleMonitor;
 import edu.atlas.earthquake.gui.EarthquakeMonitorFrame;
 import edu.atlas.earthquake.out.EarthquakeFileWriter;
+import edu.atlas.earthquake.out.Sms24x7Sender;
 import edu.atlas.earthquake.out.format.OutFormat;
 import edu.atlas.earthquake.validator.Validator;
 
@@ -26,21 +27,28 @@ public class EarthquakeController extends Thread {
 
     public static final String GLOBAL_CONFIG_PATH = "./config/global.config";
     public static final String VALIDATOR_CONFIG_PATH = "./config/validator.config";
-    public static final String OUT_FORMAT_CONFIG_PATH = "./config/outFormat.config";
+    public static final String OUT_TEXT_FORMAT_CONFIG_PATH = "./config/outTextFormat.config";
+    public static final String OUT_SMS_FORMAT_CONFIG_PATH = "./config/outSmsFormat.config";
 
     private String dataUrl = GlobalConfigConstants.DEFAULT_DATA_URL;
     private int updatePeriod = GlobalConfigConstants.DEFAULT_UPDATE_PERIOD;
     private boolean consoleAvailable = GlobalConfigConstants.DEFAULT_CONSOLE_AVAILABLE;
     private boolean guiAvailable = GlobalConfigConstants.DEFAULT_GUI_AVAILABLE;
+
     private boolean fileAvailable = GlobalConfigConstants.DEFAULT_FILE_AVAILABLE;
     private String fileOutPath = GlobalConfigConstants.DEFAULT_FILE_OUT_PATH;
+
+    private boolean smsAvailable = GlobalConfigConstants.DEFAULT_SMS48_AVAILABLE;
+    private String[] smsReceivers = null;
+    private String smsLogin = null;
+    private String smsPassword = null;
 
     public static final int INTERRUPT_EXIT_STATUS = -1;
     public static final boolean SERVER_AVAILABLE = true;
     public static final boolean SERVER_NOT_AVAILABLE = false;
 
     private DataReader dataReader;
-    private DataParser dataParser;
+    private DataParser<Earthquake> dataParser;
 
     private Validator validator;
 
@@ -65,9 +73,15 @@ public class EarthquakeController extends Thread {
         }
 
         if (fileAvailable) {
-            OutFormat outFormat = new OutFormat(OUT_FORMAT_CONFIG_PATH);
-            DataChangedListener<Earthquake> earthquakeDataChangedListener = new EarthquakeFileWriter(fileOutPath, outFormat);
-            dataChangedListeners.add(earthquakeDataChangedListener);
+            OutFormat outFormat = new OutFormat(OUT_TEXT_FORMAT_CONFIG_PATH);
+            DataChangedListener<Earthquake> fileWriter = new EarthquakeFileWriter(fileOutPath, outFormat);
+            dataChangedListeners.add(fileWriter);
+        }
+
+        if (smsAvailable) {
+            OutFormat outFormat = new OutFormat(OUT_SMS_FORMAT_CONFIG_PATH);
+            DataChangedListener<Earthquake> sms48Sender = new Sms24x7Sender(smsLogin, smsPassword, smsReceivers, outFormat);
+            dataChangedListeners.add(sms48Sender);
         }
 
         dataReader = new UrlDataReader(dataUrl);
@@ -97,6 +111,15 @@ public class EarthquakeController extends Thread {
         }
         if (config.get(GlobalConfigConstants.FILE_OUT_PATH) != null) {
             fileOutPath = config.get(GlobalConfigConstants.FILE_OUT_PATH);
+        }
+        if (config.get(GlobalConfigConstants.SMS_AVAILABLE) != null &&
+                config.get(GlobalConfigConstants.SMS_LOGIN) != null &&
+                config.get(GlobalConfigConstants.SMS_PASSWORD) != null &&
+                config.get(GlobalConfigConstants.SMS_RECEIVERS) != null) {
+            smsAvailable = Boolean.valueOf(config.get(GlobalConfigConstants.SMS_AVAILABLE));
+            smsLogin = config.get(GlobalConfigConstants.SMS_LOGIN);
+            smsPassword = config.get(GlobalConfigConstants.SMS_PASSWORD);
+            smsReceivers = config.get(GlobalConfigConstants.SMS_RECEIVERS).split(",");
         }
     }
 
@@ -158,10 +181,10 @@ public class EarthquakeController extends Thread {
         List<Earthquake> afterValidation = validateEarthquakes(beforeProcess);
 
         List<Earthquake> newEarthquake = new ArrayList<>(afterValidation);
-        newEarthquake.retainAll(allEarthquake);
+        newEarthquake.removeAll(allEarthquake);
 
         List<Earthquake> changedEarthquake = new ArrayList<>(afterValidation);
-        changedEarthquake.removeAll(allEarthquake);
+        changedEarthquake.retainAll(allEarthquake);
 
         allEarthquake.addAll(newEarthquake);
 

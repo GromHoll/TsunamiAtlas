@@ -71,4 +71,5 @@ public class EarthquakeMonitorFrame extends JFrame implements DataChangedListene
         lastUpdateLabel.setText(new Date().toString());
         tableModel.setData(event.getAllData());
     }
+
 }

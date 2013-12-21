@@ -51,7 +51,7 @@ public class OutFormat {
 
     private List<OutNode> parseSingleLine(String line) {
         if (line.startsWith(COMMENT_SYMBOL)) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         List<OutNode> lineFormat = new ArrayList<>();
