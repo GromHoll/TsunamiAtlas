@@ -7,7 +7,7 @@ import edu.atlas.common.data.DataChangedListener;
 import edu.atlas.common.data.event.DataChangedEvent;
 import edu.atlas.common.data.impl.UrlDataReader;
 import edu.atlas.common.listener.ServerListener;
-import edu.atlas.earthquake.config.GlobalConfigConstants;
+import edu.atlas.earthquake.config.GlobalConfiguration;
 import edu.atlas.earthquake.config.ValidatorConfigConstants;
 import edu.atlas.earthquake.data.EarthquakeGeoJsonParser;
 import edu.atlas.earthquake.entity.Earthquake;
@@ -21,27 +21,17 @@ import edu.atlas.earthquake.validator.Validator;
 import java.io.IOException;
 import java.util.*;
 
-
-// XXX maybe not thread
 public class EarthquakeController extends Thread {
+    public static final String FRAME_NAME = "Tsunami Atlas : Earthquake Monitor";
+
+    private int updatePeriod;
 
     public static final String GLOBAL_CONFIG_PATH = "./config/global.properties";
     public static final String VALIDATOR_CONFIG_PATH = "./config/validator.properties";
     public static final String OUT_TEXT_FORMAT_CONFIG_PATH = "./config/outTextFormat.config";
     public static final String OUT_SMS_FORMAT_CONFIG_PATH = "./config/outSmsFormat.config";
 
-    private String dataUrl = GlobalConfigConstants.DEFAULT_DATA_URL;
-    private int updatePeriod = GlobalConfigConstants.DEFAULT_UPDATE_PERIOD;
-    private boolean consoleAvailable = GlobalConfigConstants.DEFAULT_CONSOLE_AVAILABLE;
-    private boolean guiAvailable = GlobalConfigConstants.DEFAULT_GUI_AVAILABLE;
-
-    private boolean fileAvailable = GlobalConfigConstants.DEFAULT_FILE_AVAILABLE;
-    private String fileOutPath = GlobalConfigConstants.DEFAULT_FILE_OUT_PATH;
-
-    private boolean smsAvailable = GlobalConfigConstants.DEFAULT_SMS48_AVAILABLE;
-    private String[] smsReceivers = null;
-    private String smsLogin = null;
-    private String smsPassword = null;
+    private GlobalConfiguration globalConfiguration = new GlobalConfiguration(GLOBAL_CONFIG_PATH);
 
     public static final int INTERRUPT_EXIT_STATUS = -1;
     public static final boolean SERVER_AVAILABLE = true;
@@ -58,69 +48,40 @@ public class EarthquakeController extends Thread {
     private List<DataChangedListener<Earthquake>> dataChangedListeners = new LinkedList<>();
 
     public EarthquakeController() {
-        loadGlobalConfiguration();
+        updatePeriod = globalConfiguration.getUpdatePeriod();
 
-        if (consoleAvailable) {
+        if (globalConfiguration.isConsoleAvailable()) {
             ConsoleMonitor<Earthquake> consoleMonitor = new ConsoleMonitor<>();
             serverListeners.add(consoleMonitor);
             dataChangedListeners.add(consoleMonitor);
         }
 
-        if (guiAvailable) {
-            EarthquakeMonitorFrame monitorFrame = new EarthquakeMonitorFrame(GlobalConfigConstants.FRAME_NAME);
+        if (globalConfiguration.isGuiAvailable()) {
+            EarthquakeMonitorFrame monitorFrame = new EarthquakeMonitorFrame(FRAME_NAME);
             serverListeners.add(monitorFrame);
             dataChangedListeners.add(monitorFrame);
         }
 
-        if (fileAvailable) {
+        if (globalConfiguration.isFileAvailable()) {
+            String fileOutPath = globalConfiguration.getFileOutPath();
             OutFormat outFormat = new OutFormat(OUT_TEXT_FORMAT_CONFIG_PATH);
             DataChangedListener<Earthquake> fileWriter = new EarthquakeFileWriter(fileOutPath, outFormat);
             dataChangedListeners.add(fileWriter);
         }
 
-        if (smsAvailable) {
+        if (globalConfiguration.isSmsAvailable()) {
+            String smsLogin = globalConfiguration.getSmsLogin();
+            String smsPassword = globalConfiguration.getSmsPassword();
+            List<String> smsReceivers = globalConfiguration.getSmsReceivers();
             OutFormat outFormat = new OutFormat(OUT_SMS_FORMAT_CONFIG_PATH);
             DataChangedListener<Earthquake> sms48Sender = new Sms24x7Sender(smsLogin, smsPassword, smsReceivers, outFormat);
             dataChangedListeners.add(sms48Sender);
         }
 
-        dataReader = new UrlDataReader(dataUrl);
+        dataReader = new UrlDataReader(globalConfiguration.getDataUrl());
         dataParser = new EarthquakeGeoJsonParser();
 
         validator = createValidator();
-    }
-
-    private void loadGlobalConfiguration() {
-        ConfigLoader loader = new ConfigLoader(GLOBAL_CONFIG_PATH);
-        Map<String, String> config = loader.getConfig();
-
-        if (config.get(GlobalConfigConstants.DATA_URL) != null) {
-            dataUrl = config.get(GlobalConfigConstants.DATA_URL);
-        }
-        if (config.get(GlobalConfigConstants.UPDATE_PERIOD) != null) {
-            updatePeriod = Integer.valueOf(config.get(GlobalConfigConstants.UPDATE_PERIOD));
-        }
-        if (config.get(GlobalConfigConstants.CONSOLE_AVAILABLE) != null) {
-            consoleAvailable = Boolean.valueOf(config.get(GlobalConfigConstants.CONSOLE_AVAILABLE));
-        }
-        if (config.get(GlobalConfigConstants.GUI_AVAILABLE) != null) {
-            guiAvailable = Boolean.valueOf(config.get(GlobalConfigConstants.GUI_AVAILABLE));
-        }
-        if (config.get(GlobalConfigConstants.FILE_AVAILABLE) != null) {
-            fileAvailable = Boolean.valueOf(config.get(GlobalConfigConstants.FILE_AVAILABLE));
-        }
-        if (config.get(GlobalConfigConstants.FILE_OUT_PATH) != null) {
-            fileOutPath = config.get(GlobalConfigConstants.FILE_OUT_PATH);
-        }
-        if (config.get(GlobalConfigConstants.SMS_AVAILABLE) != null &&
-                config.get(GlobalConfigConstants.SMS_LOGIN) != null &&
-                config.get(GlobalConfigConstants.SMS_PASSWORD) != null &&
-                config.get(GlobalConfigConstants.SMS_RECEIVERS) != null) {
-            smsAvailable = Boolean.valueOf(config.get(GlobalConfigConstants.SMS_AVAILABLE));
-            smsLogin = config.get(GlobalConfigConstants.SMS_LOGIN);
-            smsPassword = config.get(GlobalConfigConstants.SMS_PASSWORD);
-            smsReceivers = config.get(GlobalConfigConstants.SMS_RECEIVERS).split(",");
-        }
     }
 
     private Validator createValidator() {

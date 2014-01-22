@@ -18,9 +18,9 @@ public class Sms24x7Sender implements DataChangedListener<Earthquake> {
     private OutFormat format;
     private String login;
     private String password;
-    private String[] receivers;
+    private List<String> receivers;
 
-    public Sms24x7Sender(String login, String password, String[] receivers, OutFormat format) {
+    public Sms24x7Sender(String login, String password, List<String> receivers, OutFormat format) {
         this.format = format;
         this.login = login;
         this.password = password;
