@@ -23,7 +23,7 @@ public abstract class Configuration {
         return (property != null) ? property : defaultValue;
     }
 
-    public int getPropertyWithDefault(String key, int defaultValue) {
+    public int getPropertyWithDefault(String key, Integer defaultValue) {
         try {
             return Integer.valueOf(getProperty(key));
         } catch (NumberFormatException exc) {
@@ -32,7 +32,7 @@ public abstract class Configuration {
         }
     }
 
-    public boolean getPropertyWithDefault(String key, boolean defaultValue) {
+    public boolean getPropertyWithDefault(String key, Boolean defaultValue) {
         try {
             return parseBoolean(getProperty(key));
         } catch (NumberFormatException exc) {
@@ -49,7 +49,7 @@ public abstract class Configuration {
         System.err.println("Property with name <" + key + "> not found. Used default value " + defaultValue);
     }
 
-    private boolean parseBoolean(String string) throws NumberFormatException {
+    private boolean parseBoolean(String string) {
         if (string == null) {
             throw new NumberFormatException();
         }

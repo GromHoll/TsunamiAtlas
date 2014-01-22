@@ -1,14 +1,13 @@
 package edu.atlas.earthquake;
 
-import edu.atlas.common.data.ConfigLoader;
+import edu.atlas.common.data.DataChangedListener;
 import edu.atlas.common.data.DataParser;
 import edu.atlas.common.data.DataReader;
-import edu.atlas.common.data.DataChangedListener;
 import edu.atlas.common.data.event.DataChangedEvent;
 import edu.atlas.common.data.impl.UrlDataReader;
 import edu.atlas.common.listener.ServerListener;
 import edu.atlas.earthquake.config.GlobalConfiguration;
-import edu.atlas.earthquake.config.ValidatorConfigConstants;
+import edu.atlas.earthquake.config.ValidatorConfiguration;
 import edu.atlas.earthquake.data.EarthquakeGeoJsonParser;
 import edu.atlas.earthquake.entity.Earthquake;
 import edu.atlas.earthquake.gui.ConsoleMonitor;
@@ -19,7 +18,10 @@ import edu.atlas.earthquake.out.format.OutFormat;
 import edu.atlas.earthquake.validator.Validator;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class EarthquakeController extends Thread {
     public static final String FRAME_NAME = "Tsunami Atlas : Earthquake Monitor";
@@ -30,8 +32,6 @@ public class EarthquakeController extends Thread {
     public static final String VALIDATOR_CONFIG_PATH = "./config/validator.properties";
     public static final String OUT_TEXT_FORMAT_CONFIG_PATH = "./config/outTextFormat.config";
     public static final String OUT_SMS_FORMAT_CONFIG_PATH = "./config/outSmsFormat.config";
-
-    private GlobalConfiguration globalConfiguration = new GlobalConfiguration(GLOBAL_CONFIG_PATH);
 
     public static final int INTERRUPT_EXIT_STATUS = -1;
     public static final boolean SERVER_AVAILABLE = true;
@@ -48,6 +48,7 @@ public class EarthquakeController extends Thread {
     private List<DataChangedListener<Earthquake>> dataChangedListeners = new LinkedList<>();
 
     public EarthquakeController() {
+        GlobalConfiguration globalConfiguration = new GlobalConfiguration(GLOBAL_CONFIG_PATH);
         updatePeriod = globalConfiguration.getUpdatePeriod();
 
         if (globalConfiguration.isConsoleAvailable()) {
@@ -81,30 +82,8 @@ public class EarthquakeController extends Thread {
         dataReader = new UrlDataReader(globalConfiguration.getDataUrl());
         dataParser = new EarthquakeGeoJsonParser();
 
-        validator = createValidator();
-    }
-
-    private Validator createValidator() {
-        Validator newValidator = new Validator();
-        ConfigLoader loader = new ConfigLoader(VALIDATOR_CONFIG_PATH);
-        Map<String, String> config = loader.getConfig();
-
-        if (config.get(ValidatorConfigConstants.MIN_LATITUDE) != null) {
-            newValidator.setMinLatitude(Double.valueOf(config.get(ValidatorConfigConstants.MIN_LATITUDE)));
-        }
-        if (config.get(ValidatorConfigConstants.MAX_LATITUDE) != null) {
-            newValidator.setMaxLatitude(Double.valueOf(config.get(ValidatorConfigConstants.MAX_LATITUDE)));
-        }
-        if (config.get(ValidatorConfigConstants.MIN_LONGITUDE) != null) {
-            newValidator.setMinLongitude(Double.valueOf(config.get(ValidatorConfigConstants.MIN_LONGITUDE)));
-        }
-        if (config.get(ValidatorConfigConstants.MAX_LONGITUDE) != null) {
-            newValidator.setMaxLongitude(Double.valueOf(config.get(ValidatorConfigConstants.MAX_LONGITUDE)));
-        }
-        if (config.get(ValidatorConfigConstants.MIN_MAG) != null) {
-            newValidator.setMinMag(Double.valueOf(config.get(ValidatorConfigConstants.MIN_MAG)));
-        }
-        return newValidator;
+        ValidatorConfiguration validatorConfiguration = new ValidatorConfiguration(VALIDATOR_CONFIG_PATH);
+        validator = validatorConfiguration.createValidator();
     }
 
     @Override
