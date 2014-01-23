@@ -18,6 +18,14 @@ public abstract class Configuration {
         }
     }
 
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
     public String getPropertyWithDefault(String key, String defaultValue) {
         String property = getProperty(key);
         return (property != null) ? property : defaultValue;

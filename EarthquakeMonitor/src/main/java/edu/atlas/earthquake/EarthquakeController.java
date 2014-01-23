@@ -13,6 +13,7 @@ import edu.atlas.earthquake.entity.Earthquake;
 import edu.atlas.earthquake.gui.ConsoleMonitor;
 import edu.atlas.earthquake.gui.EarthquakeMonitorFrame;
 import edu.atlas.earthquake.out.EarthquakeFileWriter;
+import edu.atlas.earthquake.out.EmailSender;
 import edu.atlas.earthquake.out.Sms24x7Sender;
 import edu.atlas.earthquake.out.format.OutFormat;
 import edu.atlas.earthquake.validator.Validator;
@@ -32,6 +33,7 @@ public class EarthquakeController extends Thread {
     public static final String VALIDATOR_CONFIG_PATH = "./config/validator.properties";
     public static final String OUT_TEXT_FORMAT_CONFIG_PATH = "./config/outTextFormat.config";
     public static final String OUT_SMS_FORMAT_CONFIG_PATH = "./config/outSmsFormat.config";
+    public static final String OUT_EMAIL_FORMAT_CONFIG_PATH = "./config/outEmailFormat.config";
 
     public static final int INTERRUPT_EXIT_STATUS = -1;
     public static final boolean SERVER_AVAILABLE = true;
@@ -68,6 +70,13 @@ public class EarthquakeController extends Thread {
             OutFormat outFormat = new OutFormat(OUT_TEXT_FORMAT_CONFIG_PATH);
             DataChangedListener<Earthquake> fileWriter = new EarthquakeFileWriter(fileOutPath, outFormat);
             dataChangedListeners.add(fileWriter);
+        }
+
+        if (globalConfiguration.isEmailAvailable()) {
+            OutFormat outFormat = new OutFormat(OUT_EMAIL_FORMAT_CONFIG_PATH);
+            DataChangedListener<Earthquake> emailSender =
+                    new EmailSender(globalConfiguration.getEmailConfiguration(), outFormat);
+            dataChangedListeners.add(emailSender);
         }
 
         if (globalConfiguration.isSmsAvailable()) {
