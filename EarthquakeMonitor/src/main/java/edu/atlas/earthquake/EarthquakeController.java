@@ -19,21 +19,15 @@ import edu.atlas.earthquake.out.format.OutFormat;
 import edu.atlas.earthquake.validator.Validator;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+
+import static edu.atlas.earthquake.ConfigConst.*;
 
 public class EarthquakeController extends Thread {
+
     public static final String FRAME_NAME = "Tsunami Atlas : Earthquake Monitor";
 
     private int updatePeriod;
-
-    public static final String GLOBAL_CONFIG_PATH = "./config/global.properties";
-    public static final String VALIDATOR_CONFIG_PATH = "./config/validator.properties";
-    public static final String OUT_TEXT_FORMAT_CONFIG_PATH = "./config/outTextFormat.config";
-    public static final String OUT_SMS_FORMAT_CONFIG_PATH = "./config/outSmsFormat.config";
-    public static final String OUT_EMAIL_FORMAT_CONFIG_PATH = "./config/outEmailFormat.config";
 
     public static final int INTERRUPT_EXIT_STATUS = -1;
     public static final boolean SERVER_AVAILABLE = true;
