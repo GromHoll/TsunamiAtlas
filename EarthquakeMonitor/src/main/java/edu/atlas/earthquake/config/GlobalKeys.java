@@ -6,7 +6,7 @@ import edu.atlas.common.config.property.CollectionPropertyKey;
 import edu.atlas.common.config.property.IntegerPropertyKey;
 import edu.atlas.common.config.property.StringPropertyKey;
 
-public interface GlobalKey {
+public interface GlobalKeys {
 
     static final String DEFAULT_DATA_URL = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson";
 

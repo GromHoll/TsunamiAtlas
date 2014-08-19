@@ -20,6 +20,6 @@ public class CollectionPropertyKey<T> extends PropertyKey<Collection<T>> {
     @Override
     public Collection<T> parseValue(String str) {
         String[] split = str.split(separator);
-        return Stream.of(split).map(propertyKey::parseValue).collect(Collectors.toList());
+        return Stream.of(split).map(propertyKey::parseValue).collect(Collectors.<T>toList());
     }
 }

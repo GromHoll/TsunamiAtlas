@@ -1,20 +1,24 @@
 package edu.atlas.common.config.property;
 
 
-import java.util.Optional;
-
 public abstract class PropertyKey<T> {
 
     private String key;
-    private Optional<T> defaultValue;
+    private T defaultValue;
+    private boolean isRequired;
 
     protected PropertyKey(String key) {
-        this(key, null);
+        this(key, null, true);
     }
 
     protected PropertyKey(String key, T defaultValue) {
+        this(key, defaultValue, false);
+    }
+
+    private PropertyKey(String key, T defaultValue, boolean isRequired) {
         this.key = key;
-        this.defaultValue = Optional.ofNullable(defaultValue);
+        this.defaultValue = defaultValue;
+        this.isRequired = isRequired;
     }
 
     public String getKey() {
@@ -22,8 +26,11 @@ public abstract class PropertyKey<T> {
     }
 
     public T getDefaultValue() {
-        return defaultValue.get();
+        if (!isRequired) {
+            return defaultValue;
+        }
+        throw new IllegalArgumentException("Required property <" + key + "> missed.");
     }
 
-    abstract T parseValue(String str);
+    public abstract T parseValue(String str);
 }

@@ -27,7 +27,7 @@
         <module name="TsunamiAtlasCommon" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="EarthquakeMonitor" target="1.8" />
       <module name="TsunamiAtlas" target="1.8" />
       <module name="TsunamiAtlasCommon" target="1.8" />

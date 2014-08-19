@@ -1,40 +1,45 @@
 package edu.atlas.earthquake.out;
 
+import edu.atlas.common.config.Configuration;
+import edu.atlas.common.config.SystemConfiguration;
 import edu.atlas.common.data.DataChangedListener;
 import edu.atlas.common.data.event.DataChangedEvent;
-import edu.atlas.earthquake.config.GlobalConfiguration;
 import edu.atlas.earthquake.entity.Earthquake;
 import edu.atlas.earthquake.out.format.OutFormat;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+
+import static edu.atlas.earthquake.config.EmailKeys.*;
 
 public class EmailSender  implements DataChangedListener<Earthquake> {
 
     public static String EMAIL_TITLE = "Earthquake Event";
 
     private final String from;
-    private final List<String> receivers;
+    private final Collection<String> receivers;
 
-    private Properties props = new Properties();
     private Session session;
     private OutFormat format;
 
-    public EmailSender(GlobalConfiguration.EmailConfiguration configuration, OutFormat format) {
+    public EmailSender(OutFormat format) {
         this.format = format;
 
-        final String address = configuration.getSmtpAddress();
-        final String password = configuration.getSmtpPassword();
-        this.from = configuration.getFrom();
-        this.receivers = configuration.getReceivers();
+        Configuration config = new SystemConfiguration();
+        final String address = config.getProperty(SMTP_ADDRESS);
+        final String password = config.getProperty(SMTP_PASSWORD);
+        this.from = config.getProperty(FROM_KEY);
+        this.receivers = config.getProperty(RECEIVERS);
 
-        this.props.put("mail.smtp.auth", "true");
-        this.props.put("mail.smtp.starttls.enable", "true");
-        this.props.put("mail.smtp.host", configuration.getSmtpServer());
-        this.props.put("mail.smtp.port", configuration.getSmtpPort());
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", config.getProperty(SMTP_SERVER));
+        props.put("mail.smtp.port", config.getProperty(SMTP_PORT));
 
         this.session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
@@ -46,11 +51,8 @@ public class EmailSender  implements DataChangedListener<Earthquake> {
 
     @Override
     public void process(DataChangedEvent<Earthquake> event) {
-        for (Earthquake earthquake : event.getNewData()) {
-            for (String to : receivers) {
-                sendTo(to, earthquake);
-            }
-        }
+        List<Earthquake> newEarthquakes = event.getNewData();
+        newEarthquakes.forEach(eq -> receivers.forEach(to -> sendTo(to, eq)));
     }
 
     private void sendTo(String to, Earthquake earthquake) {

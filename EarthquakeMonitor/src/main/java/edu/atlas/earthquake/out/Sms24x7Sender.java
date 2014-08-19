@@ -7,6 +7,7 @@ import edu.atlas.earthquake.out.format.OutFormat;
 import edu.atlas.earthquake.out.sms24x7.SMS24x7Impl;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 public class Sms24x7Sender implements DataChangedListener<Earthquake> {
@@ -18,9 +19,9 @@ public class Sms24x7Sender implements DataChangedListener<Earthquake> {
     private OutFormat format;
     private String login;
     private String password;
-    private List<String> receivers;
+    private Collection<String> receivers;
 
-    public Sms24x7Sender(String login, String password, List<String> receivers, OutFormat format) {
+    public Sms24x7Sender(String login, String password, Collection<String> receivers, OutFormat format) {
         this.format = format;
         this.login = login;
         this.password = password;
