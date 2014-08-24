@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
 
-import static edu.atlas.earthquake.ConfigConst.*;
+import static edu.atlas.earthquake.ConfigPathConst.*;
 import static edu.atlas.earthquake.config.GlobalKeys.*;
 
 public class EarthquakeController extends Thread {
