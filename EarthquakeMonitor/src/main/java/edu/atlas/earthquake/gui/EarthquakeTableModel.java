@@ -4,6 +4,7 @@ import edu.atlas.earthquake.entity.Earthquake;
 
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class EarthquakeTableModel extends DefaultTableModel {
@@ -12,9 +13,10 @@ public class EarthquakeTableModel extends DefaultTableModel {
 
     public static final String columnNames[] = {"Place", "Longitude", "Latitude", "Magnitude", "Date"};
 
-    public void setData(List<Earthquake> list) {
-        if(list != null) {
-            earthquakes = list;
+    public void setData(Collection<Earthquake> newEarthquakes) {
+        if(newEarthquakes != null) {
+            earthquakes.clear();
+            earthquakes.addAll(newEarthquakes);
             fireTableDataChanged();
         }
     }

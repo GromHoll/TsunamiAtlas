@@ -9,7 +9,6 @@ import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -27,6 +26,7 @@ public class EarthquakeGeoJsonParser implements DataParser<Earthquake> {
     private final JSONParser jsonParser = new JSONParser();
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Earthquake> parseData(String data) {
         ArrayList<Earthquake> earthquakes = new ArrayList<>();
 
@@ -34,10 +34,9 @@ public class EarthquakeGeoJsonParser implements DataParser<Earthquake> {
             JSONObject jsonObj = (JSONObject) jsonParser.parse(data);
             JSONArray featuresArray = (JSONArray) jsonObj.get(FEATURES_KEY);
 
-            Iterator<JSONObject> featuresIterator = featuresArray.iterator();
-            while(featuresIterator.hasNext()) {
-                Earthquake earthquake = parseEarthquake(featuresIterator.next());
-                if(earthquake != null) {
+            for (JSONObject jsonEarthquake : (Iterable<JSONObject>) featuresArray) {
+                Earthquake earthquake = parseEarthquake(jsonEarthquake);
+                if (earthquake != null) {
                     earthquakes.add(earthquake);
                 }
             }

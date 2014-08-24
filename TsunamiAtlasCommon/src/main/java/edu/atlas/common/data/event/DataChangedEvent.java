@@ -1,28 +1,29 @@
 package edu.atlas.common.data.event;
 
+import java.util.Collection;
 import java.util.List;
 
 public class DataChangedEvent<T> {
 
-    private List<T> allData;
-    private List<T> changedData;
-    private List<T> newData;
+    private Collection<T> allData;
+    private Collection<T> changedData;
+    private Collection<T> newData;
 
-    public DataChangedEvent(List<T> allData, List<T> changedData, List<T> newData) {
+    public DataChangedEvent(Collection<T> allData, List<T> changedData, List<T> newData) {
         this.allData = allData;
         this.changedData = changedData;
         this.newData = newData;
     }
 
-    public List<T> getAllData() {
+    public Collection<T> getAllData() {
         return allData;
     }
 
-    public List<T> getChangedData() {
+    public Collection<T> getChangedData() {
         return changedData;
     }
 
-    public List<T> getNewData() {
+    public Collection<T> getNewData() {
         return newData;
     }
 }

@@ -11,7 +11,6 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Collection;
-import java.util.List;
 import java.util.Properties;
 
 import static edu.atlas.earthquake.config.EmailKeys.*;
@@ -51,7 +50,7 @@ public class EmailSender  implements DataChangedListener<Earthquake> {
 
     @Override
     public void process(DataChangedEvent<Earthquake> event) {
-        List<Earthquake> newEarthquakes = event.getNewData();
+        Collection<Earthquake> newEarthquakes = event.getNewData();
         newEarthquakes.forEach(eq -> receivers.forEach(to -> sendTo(to, eq)));
     }
 

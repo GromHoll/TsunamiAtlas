@@ -17,6 +17,7 @@ import edu.atlas.earthquake.out.EmailSender;
 import edu.atlas.earthquake.out.Sms24x7Sender;
 import edu.atlas.earthquake.out.format.OutFormat;
 import edu.atlas.earthquake.validator.Validator;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class EarthquakeController extends Thread {
 
     private Validator validator;
 
-    private List<Earthquake> allEarthquake = new ArrayList<>();
+    private Collection<Earthquake> allEarthquake = new CircularFifoQueue<>(1000);
 
     private List<ServerListener> serverListeners = new LinkedList<>();
     private List<DataChangedListener<Earthquake>> dataChangedListeners = new LinkedList<>();

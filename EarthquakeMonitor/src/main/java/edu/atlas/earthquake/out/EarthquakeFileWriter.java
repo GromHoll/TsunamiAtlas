@@ -8,7 +8,7 @@ import edu.atlas.earthquake.out.format.OutFormat;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.List;
+import java.util.Collection;
 
 public class EarthquakeFileWriter implements DataChangedListener<Earthquake> {
 
@@ -29,8 +29,8 @@ public class EarthquakeFileWriter implements DataChangedListener<Earthquake> {
         output(event.getNewData());
     }
 
-    public void output(List<Earthquake> list) {
-        for(Earthquake earthquake : list) {
+    public void output(Collection<Earthquake> earthquakes) {
+        for(Earthquake earthquake : earthquakes) {
             output(earthquake);
         }
     }

@@ -8,7 +8,6 @@ import edu.atlas.earthquake.out.sms24x7.SMS24x7Impl;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 public class Sms24x7Sender implements DataChangedListener<Earthquake> {
 
@@ -35,7 +34,7 @@ public class Sms24x7Sender implements DataChangedListener<Earthquake> {
         }
     }
 
-    public void sendAll(String receiver, List<Earthquake> earthquakes) {
+    public void sendAll(String receiver, Collection<Earthquake> earthquakes) {
         for (Earthquake earthquake : earthquakes) {
             send(receiver, format.getFormattedText(earthquake));
         }
