@@ -1,6 +1,5 @@
 package edu.atlas.common.data.impl;
 
-import edu.atlas.common.data.DataReader;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

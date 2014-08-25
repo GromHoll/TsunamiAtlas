@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static edu.atlas.earthquake.ConfigPathConst.*;
 import static edu.atlas.earthquake.config.GlobalKeys.*;
@@ -111,7 +112,7 @@ public class EarthquakeController extends Thread {
         while (true) {
             try {
                 String[] data = dataReader.getData();
-                List<Earthquake> earthquakes = dataParser.parseData(unionLines(data));
+                Collection<Earthquake> earthquakes = dataParser.parseData(unionLines(data));
                 processEarthquakes(earthquakes);
                 notifyServerListener(SERVER_AVAILABLE);
             } catch (IOException exc) {
@@ -137,13 +138,13 @@ public class EarthquakeController extends Thread {
         }
     }
 
-    private void processEarthquakes(List<Earthquake> beforeProcess) {
-        List<Earthquake> afterValidation = validateEarthquakes(beforeProcess);
+    private void processEarthquakes(Collection<Earthquake> beforeProcess) {
+        Collection<Earthquake> afterValidation = validateEarthquakes(beforeProcess);
 
-        List<Earthquake> newEarthquake = new ArrayList<>(afterValidation);
+        Collection<Earthquake> newEarthquake = new ArrayList<>(afterValidation);
         newEarthquake.removeAll(allEarthquake);
 
-        List<Earthquake> changedEarthquake = new ArrayList<>(afterValidation);
+        Collection<Earthquake> changedEarthquake = new ArrayList<>(afterValidation);
         changedEarthquake.retainAll(allEarthquake);
 
         allEarthquake.addAll(newEarthquake);
@@ -151,26 +152,15 @@ public class EarthquakeController extends Thread {
         notifyOutputs(new DataChangedEvent<>(allEarthquake, changedEarthquake, newEarthquake));
     }
 
-    private List<Earthquake> validateEarthquakes(List<Earthquake> earthquakes) {
-        List<Earthquake> result = new ArrayList<>(earthquakes);
-        Iterator<Earthquake> it = result.iterator();
-        while (it.hasNext()) {
-            if (!validator.validate(it.next())) {
-                it.remove();
-            }
-        }
-        return result;
+    private Collection<Earthquake> validateEarthquakes(Collection<Earthquake> earthquakes) {
+        return earthquakes.stream().filter(validator::validate).collect(Collectors.toList());
     }
 
     private void notifyOutputs(DataChangedEvent<Earthquake> event) {
-        for(DataChangedListener<Earthquake> eqo : dataChangedListeners) {
-            eqo.process(event);
-        }
+        dataChangedListeners.forEach(listener -> listener.process(event));
     }
 
     private void notifyServerListener(boolean isAvailable) {
-        for(ServerListener sl : serverListeners) {
-            sl.setAvailable(isAvailable);
-        }
+        serverListeners.forEach(listener -> listener.setAvailable(isAvailable));
     }
 }

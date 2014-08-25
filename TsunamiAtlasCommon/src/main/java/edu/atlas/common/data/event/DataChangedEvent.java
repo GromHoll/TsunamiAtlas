@@ -1,7 +1,6 @@
 package edu.atlas.common.data.event;
 
 import java.util.Collection;
-import java.util.List;
 
 public class DataChangedEvent<T> {
 
@@ -9,7 +8,7 @@ public class DataChangedEvent<T> {
     private Collection<T> changedData;
     private Collection<T> newData;
 
-    public DataChangedEvent(Collection<T> allData, List<T> changedData, List<T> newData) {
+    public DataChangedEvent(Collection<T> allData, Collection<T> changedData, Collection<T> newData) {
         this.allData = allData;
         this.changedData = changedData;
         this.newData = newData;
