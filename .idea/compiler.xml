@@ -22,12 +22,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="DartMonitor" />
         <module name="earthquakeMonitor" />
         <module name="EarthquakeMonitor" />
         <module name="TsunamiAtlasCommon" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
+      <module name="DartMonitor" target="1.8" />
       <module name="EarthquakeMonitor" target="1.8" />
       <module name="TsunamiAtlas" target="1.8" />
       <module name="TsunamiAtlasCommon" target="1.8" />

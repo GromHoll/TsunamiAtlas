@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/DartMonitor/DartMonitor.iml" filepath="$PROJECT_DIR$/DartMonitor/DartMonitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/EarthquakeMonitor/EarthquakeMonitor.iml" filepath="$PROJECT_DIR$/EarthquakeMonitor/EarthquakeMonitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/TsunamiAtlas.iml" filepath="$PROJECT_DIR$/TsunamiAtlas.iml" />
       <module fileurl="file://$PROJECT_DIR$/TsunamiAtlasCommon/TsunamiAtlasCommon.iml" filepath="$PROJECT_DIR$/TsunamiAtlasCommon/TsunamiAtlasCommon.iml" />

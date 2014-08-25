@@ -12,6 +12,7 @@
     <modules>
         <module>earthquakeMonitor</module>
         <module>TsunamiAtlasCommon</module>
+        <module>DartMonitor</module>
     </modules>
 
     <build>
