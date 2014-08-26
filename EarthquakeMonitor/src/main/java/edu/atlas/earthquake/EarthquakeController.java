@@ -39,7 +39,7 @@ public class EarthquakeController extends Thread {
     public static final boolean SERVER_NOT_AVAILABLE = false;
 
     private DataReader dataReader;
-    private DataParser<Earthquake> dataParser;
+    private DataParser<Earthquake, String> dataParser;
 
     private Validator validator;
 
