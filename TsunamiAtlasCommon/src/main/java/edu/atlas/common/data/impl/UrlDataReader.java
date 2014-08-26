@@ -26,4 +26,6 @@ public class UrlDataReader extends AbstractStreamReader {
         connection.setReadTimeout(READ_TIMEOUT);
         return new BufferedReader(new InputStreamReader(url.openStream()));
     }
+
+
 }

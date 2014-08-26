@@ -111,8 +111,8 @@ public class EarthquakeController extends Thread {
     public void run() {
         while (true) {
             try {
-                String[] data = dataReader.getData();
-                Collection<Earthquake> earthquakes = dataParser.parseData(unionLines(data));
+                String data = dataReader.getAllData();
+                Collection<Earthquake> earthquakes = dataParser.parseData(data);
                 processEarthquakes(earthquakes);
                 notifyServerListener(SERVER_AVAILABLE);
             } catch (IOException exc) {
@@ -120,14 +120,6 @@ public class EarthquakeController extends Thread {
             }
             sleep();
         }
-    }
-
-    private String unionLines(String[] lines) {
-        StringBuilder sb = new StringBuilder();
-        for (String l : lines) {
-            sb.append(l).append('\n');
-        }
-        return sb.toString();
     }
 
     private void sleep() {
