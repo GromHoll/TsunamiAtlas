@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class EarthquakeGeoJsonParser implements DataParser<Earthquake> {
+public class EarthquakeGeoJsonParser implements DataParser<Earthquake, String> {
 
     private static final String ID_KEY          = "id";
     private static final String MAG_KEY         = "mag";

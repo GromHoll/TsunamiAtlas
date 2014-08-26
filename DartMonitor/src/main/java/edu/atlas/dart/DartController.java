@@ -1,10 +1,15 @@
 package edu.atlas.dart;
 
+import edu.atlas.dart.entity.DartStations;
+
 public class DartController implements Runnable {
+
+    private DartStations dartStations = new DartStations();
 
     @Override
     public void run() {
-        System.out.println("Hello world");
+        // TODO create real program
+        dartStations.getDartStations().forEach(dart -> System.out.println(dart.getSiteId()));
     }
 
 }

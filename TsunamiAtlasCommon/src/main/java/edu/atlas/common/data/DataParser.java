@@ -2,6 +2,6 @@ package edu.atlas.common.data;
 
 import java.util.Collection;
 
-public interface DataParser<T> {
-    public Collection<T> parseData(String data);
+public interface DataParser<R, S> {
+    public Collection<R> parseData(S data);
 }
