@@ -3,6 +3,7 @@ package edu.atlas.dart.data;
 
 import edu.atlas.common.data.DataParser;
 import edu.atlas.dart.entity.DartStation;
+import org.apache.commons.lang3.Range;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,7 +13,11 @@ import java.util.stream.Collectors;
 public class DartParser implements DataParser<DartStation, String[]> {
 
     public static final int HEADER_SIZE = 2;
-    public static final String SPLIT_SYMBOL = " ";
+
+    public static final Range<Integer> SITE = Range.between(0, 10);
+    public static final Range<Integer> NAME = Range.between(13, 64);
+    public static final Range<Integer> LATITUDE  = Range.between(65, 74);
+    public static final Range<Integer> LONGITUDE = Range.between(76, 86);
 
     @Override
     public Collection<DartStation> parseData(String[] data) {
@@ -26,6 +31,15 @@ public class DartParser implements DataParser<DartStation, String[]> {
     }
 
     private DartStation parseDart(String data) {
-        return new DartStation(data.split(SPLIT_SYMBOL)[0]);
+        String site = getSubString(data, SITE).trim();
+        String name = getSubString(data, NAME).trim();
+        Double latitude  = Double.valueOf(getSubString(data, LATITUDE));
+        Double longitude = Double.valueOf(getSubString(data, LONGITUDE));
+        return new DartStation(site, name, latitude, longitude);
     }
+
+    private String getSubString(String string, Range<Integer> range) {
+        return string.substring(range.getMinimum(), range.getMaximum());
+    }
+
 }

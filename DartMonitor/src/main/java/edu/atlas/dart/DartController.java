@@ -9,7 +9,7 @@ public class DartController implements Runnable {
     @Override
     public void run() {
         // TODO create real program
-        dartStations.getDartStations().forEach(dart -> System.out.println(dart.getSiteId()));
+        dartStations.getDartStations().forEach(System.out::println);
     }
 
 }
