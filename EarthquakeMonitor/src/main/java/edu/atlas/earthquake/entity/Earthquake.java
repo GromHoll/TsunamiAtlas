@@ -1,5 +1,7 @@
 package edu.atlas.earthquake.entity;
 
+import lombok.Getter;
+
 import java.util.Date;
 
 public class Earthquake {
@@ -7,15 +9,15 @@ public class Earthquake {
     public static final String UNKNOWN_ID = "unknown id";
     public static final String UNKNOWN_PLACE = "unknown place";
 
-    private String id;
+    @Getter private String id;
 
-    private Date date;
-    private String place;
-    private double mag;
+    @Getter private Date date;
+    @Getter private String place;
+    @Getter private double mag;
 
-    private double longitude;
-    private double latitude;
-    private double depth;
+    @Getter private double longitude;
+    @Getter private double latitude;
+    @Getter private double depth;
 
     public Earthquake(String id, Date date, String place, double mag, double longitude, double latitude, double depth) {
         this.id = (id != null) ? id : UNKNOWN_ID;
@@ -25,34 +27,6 @@ public class Earthquake {
         this.longitude = longitude;
         this.latitude = latitude;
         this.depth = depth;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public double getMag() {
-        return mag;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getDepth() {
-        return depth;
-    }
-
-    public String getId() {
-        return id;
     }
 
     @Override

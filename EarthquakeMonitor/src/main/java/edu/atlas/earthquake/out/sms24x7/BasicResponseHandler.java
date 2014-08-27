@@ -16,10 +16,6 @@ public class BasicResponseHandler implements ResponseHandler<String> {
         this.encoding = "utf-8";
     }
 
-    public BasicResponseHandler(String encoding) {
-        this.encoding = encoding;
-    }
-
     public String handleResponse(final HttpResponse response) throws IOException {
         StatusLine statusLine = response.getStatusLine();
         HttpEntity entity = response.getEntity();

@@ -4,24 +4,21 @@ import edu.atlas.common.data.DataChangedListener;
 import edu.atlas.common.data.event.DataChangedEvent;
 import edu.atlas.earthquake.entity.Earthquake;
 import edu.atlas.earthquake.out.format.OutFormat;
+import lombok.RequiredArgsConstructor;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Collection;
 
+@RequiredArgsConstructor
 public class EarthquakeFileWriter implements DataChangedListener<Earthquake> {
 
     private final String FILE_NAME_PREFIX = "Earthquake_";
     private final String FILE_NAME_SUFFIX = ".txt";
 
-    private String filePath;
-    private OutFormat format;
-
-    public EarthquakeFileWriter(String filePath, OutFormat format) {
-        this.filePath = filePath;
-        this.format = format;
-    }
+    private final String filePath;
+    private final OutFormat format;
 
     @Override
     public void process(DataChangedEvent<Earthquake> event) {
@@ -30,9 +27,7 @@ public class EarthquakeFileWriter implements DataChangedListener<Earthquake> {
     }
 
     public void output(Collection<Earthquake> earthquakes) {
-        for(Earthquake earthquake : earthquakes) {
-            output(earthquake);
-        }
+        earthquakes.forEach(this::output);
     }
 
     private void output(Earthquake earthquake) {

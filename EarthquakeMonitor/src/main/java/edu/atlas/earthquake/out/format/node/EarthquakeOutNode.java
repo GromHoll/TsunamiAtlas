@@ -1,7 +1,9 @@
 package edu.atlas.earthquake.out.format.node;
 
 import edu.atlas.earthquake.entity.Earthquake;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class EarthquakeOutNode implements OutNode {
 
     public static final String DATE = "date";
@@ -11,13 +13,9 @@ public class EarthquakeOutNode implements OutNode {
     public static final String LATITUDE = "latitude";
     public static final String DEPTH = "depth";
 
-   public static final String DEFAULT = "default";
+    public static final String DEFAULT = "default";
 
     private final String outValue;
-
-    public EarthquakeOutNode(String outValue) {
-        this.outValue = outValue;
-    }
 
     @Override
     public String getOut(Earthquake earthquake) {

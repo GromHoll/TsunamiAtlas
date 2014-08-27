@@ -2,38 +2,19 @@ package edu.atlas.earthquake.validator;
 
 import edu.atlas.common.config.Configuration;
 import edu.atlas.earthquake.entity.Earthquake;
+import lombok.Setter;
 
 import static edu.atlas.earthquake.config.ValidatorKeys.*;
 
 public class Validator {
 
-    private double minLatitude = -90;
-    private double maxLatitude =  90;
+    @Setter private double minLatitude = -90;
+    @Setter private double maxLatitude =  90;
 
-    private double minLongitude = -180;
-    private double maxLongitude =  180;
+    @Setter private double minLongitude = -180;
+    @Setter private double maxLongitude =  180;
 
-    private double minMag = 0;
-
-    public void setMinLongitude(double minLongitude) {
-        this.minLongitude = minLongitude;
-    }
-
-    public void setMaxLongitude(double maxLongitude) {
-        this.maxLongitude = maxLongitude;
-    }
-
-    public void setMinLatitude(double minLatitude) {
-        this.minLatitude = minLatitude;
-    }
-
-    public void setMaxLatitude(double maxLatitude) {
-        this.maxLatitude = maxLatitude;
-    }
-
-    public void setMinMag(double minMag) {
-        this.minMag = minMag;
-    }
+    @Setter private double minMag = 0;
 
     public boolean validate(Earthquake earthquake) {
         return (earthquake.getLongitude() >= minLongitude)
