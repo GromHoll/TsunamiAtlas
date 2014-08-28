@@ -10,17 +10,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DartParser implements DataParser<DartStation, String[]> {
+public class DartStationsParser implements DataParser<DartStation, String[]> {
 
-    public static final int HEADER_SIZE = 2;
+    private static final int HEADER_SIZE = 2;
 
-    public static final Range<Integer> SITE = Range.between(0, 10);
-    public static final Range<Integer> NAME = Range.between(13, 64);
-    public static final Range<Integer> LATITUDE  = Range.between(65, 74);
-    public static final Range<Integer> LONGITUDE = Range.between(76, 86);
+    private static final Range<Integer> SITE = Range.between(0, 10);
+    private static final Range<Integer> NAME = Range.between(13, 64);
+    private static final Range<Integer> LATITUDE  = Range.between(65, 74);
+    private static final Range<Integer> LONGITUDE = Range.between(76, 86);
 
     @Override
-    public Collection<DartStation> parseData(String[] data) {
+    public List<DartStation> parseData(String[] data) {
         Collection<String> dartData = getDartDataWithoutHeader(data);
         return dartData.stream().map(this::parseDart).collect(Collectors.toList());
     }
