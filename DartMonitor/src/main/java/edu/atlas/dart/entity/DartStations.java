@@ -20,8 +20,8 @@ public class DartStations {
     public static final String DART_EXTENTION = ".dart";
 
     private DataReader dartsDataReader;
-    private DataParser<DartStation, String[]> dartsDataParser;
-    private DataParser<DartState, String[]> dartStatesDataParser;
+    private DataParser<DartStation, List<String>> dartsDataParser;
+    private DataParser<DartState, List<String>> dartStatesDataParser;
 
     public DartStations() {
         // TODO use config for getting url
@@ -32,7 +32,7 @@ public class DartStations {
 
     public Collection<DartStation> getDartStations() {
         try {
-            String[] data = dartsDataReader.getData();
+           List<String> data = dartsDataReader.getData();
             return dartsDataParser.parseData(data);
         } catch (IOException exc) {
             return Collections.emptyList();
@@ -42,7 +42,7 @@ public class DartStations {
     public List<DartState> getDartStates(@NonNull DartStation station) {
         try {
             DataReader dartStatesDataReader = new UrlDataReader(getDartStatesLink(station));
-            String[] data = dartStatesDataReader.getData();
+            List<String> data = dartStatesDataReader.getData();
             return dartStatesDataParser.parseData(data);
         } catch (IOException exc) {
             return Collections.emptyList();

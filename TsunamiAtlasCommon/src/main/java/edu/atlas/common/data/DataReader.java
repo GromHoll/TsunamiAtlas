@@ -1,10 +1,11 @@
 package edu.atlas.common.data;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface DataReader {
 
-    public String[] getData() throws IOException;
+    public List<String> getData() throws IOException;
 
     public String getAllData() throws IOException;
 

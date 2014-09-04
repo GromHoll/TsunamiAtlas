@@ -5,12 +5,11 @@ import edu.atlas.common.data.DataParser;
 import edu.atlas.dart.entity.DartStation;
 import org.apache.commons.lang3.Range;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DartStationsParser implements DataParser<DartStation, String[]> {
+public class DartStationsParser implements DataParser<DartStation, List<String>> {
 
     private static final int HEADER_SIZE = 2;
 
@@ -20,14 +19,13 @@ public class DartStationsParser implements DataParser<DartStation, String[]> {
     private static final Range<Integer> LONGITUDE = Range.between(76, 86);
 
     @Override
-    public List<DartStation> parseData(String[] data) {
+    public List<DartStation> parseData(List<String> data) {
         Collection<String> dartData = getDartDataWithoutHeader(data);
         return dartData.stream().map(this::parseDart).collect(Collectors.toList());
     }
 
-    private Collection<String> getDartDataWithoutHeader(String[] data) {
-        List<String> list = Arrays.asList(data);
-        return list.subList(HEADER_SIZE, list.size());
+    private Collection<String> getDartDataWithoutHeader(List<String> data) {
+        return data.subList(HEADER_SIZE, data.size());
     }
 
     private DartStation parseDart(String data) {

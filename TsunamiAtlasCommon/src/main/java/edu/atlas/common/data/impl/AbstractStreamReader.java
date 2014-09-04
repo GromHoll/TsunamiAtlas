@@ -7,11 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class AbstractStreamReader implements DataReader {
 
     @Override
-    public String[] getData() throws IOException {
+    public List<String> getData() throws IOException {
         try (BufferedReader in  = openStream()) {
             return readData(in);
         }
@@ -19,18 +20,18 @@ public abstract class AbstractStreamReader implements DataReader {
 
     @Override
     public String getAllData() throws IOException {
-        StringBuilder sb = new StringBuilder();
-        Arrays.stream(getData()).forEach(line -> sb.append(line).append("\n"));
-        return sb.toString();
+        return getData().stream().collect(Collectors.joining("\n"));
     }
 
-    private String[] readData(BufferedReader in) throws IOException {
-        List<String> lines = new ArrayList<>();
-        String tempLine;
-        while ((tempLine = in.readLine()) != null) {
-            lines.add(tempLine);
-        }
-        return lines.toArray(new String[lines.size()]);
+    private List<String> readData(BufferedReader in) throws IOException {
+        return in.lines().collect(Collectors.toList());
+
+//        List<String> lines = new ArrayList<>();
+//        String tempLine;
+//        while ((tempLine = in.readLine()) != null) {
+//            lines.add(tempLine);
+//        }
+//        return lines.toArray(new String[lines.size()]);
     }
 
     abstract public BufferedReader openStream() throws IOException ;

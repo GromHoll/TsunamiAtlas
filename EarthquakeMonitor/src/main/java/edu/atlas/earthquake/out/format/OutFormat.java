@@ -40,7 +40,7 @@ public class OutFormat {
         }
     }
 
-    private List<OutNode> parseLines(String[] lines) {
+    private List<OutNode> parseLines(List<String> lines) {
         List<OutNode> format = new ArrayList<>();
         for (String line : lines) {
             format.addAll(parseSingleLine(line));
