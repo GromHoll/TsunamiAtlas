@@ -3,9 +3,7 @@ package edu.atlas.dart.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
-@ToString
 @RequiredArgsConstructor
 public class DartStation {
 
@@ -14,4 +12,8 @@ public class DartStation {
     @Getter private final double latitude;
     @Getter private final double longitude;
 
+    @Override
+    public String toString() {
+        return String.format("[% 3.3f, % 3.3f] - %s", latitude, longitude, siteId);
+    }
 }

@@ -29,8 +29,8 @@ public class EarthquakeMonitorFrame extends JFrame implements DataChangedListene
     }
 
     private void init() {
-        red_icon   = loadIcon("/edu.atlas.earthquake/images/red.png");
-        green_icon = loadIcon("/edu.atlas.earthquake/images/green.png");
+        red_icon   = loadIcon("/edu.atlas/images/red.png");
+        green_icon = loadIcon("/edu.atlas/images/green.png");
 
         tableModel = new EarthquakeTableModel();
         infoTable.setModel(tableModel);
