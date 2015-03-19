@@ -18,7 +18,7 @@ public class DartController implements Runnable {
         DartMonitorFrame frame = new DartMonitorFrame(FRAME_NAME);
         frame.setDartStations(darts);
         frame.addChangeStationAction(station -> {
-            if (dartStations != null) {
+            if (station != null) {
                 frame.setDartStates(dartStations.getDartStates(station));
             }
         });
