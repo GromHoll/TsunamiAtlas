@@ -1,5 +1,8 @@
 package edu.atlas.dart;
 
+import edu.atlas.dart.cleaner.DartCleaner;
+import edu.atlas.dart.cleaner.TTideCleaner;
+import edu.atlas.dart.entity.DartState;
 import edu.atlas.dart.entity.DartStation;
 import edu.atlas.dart.entity.DartStations;
 import edu.atlas.dart.gui.DartMonitorFrame;
@@ -10,7 +13,9 @@ public class DartController implements Runnable {
 
     public static final String FRAME_NAME = "Tsunami Atlas : DART Monitor";
 
+    // TODO maybe move cleaner to DartStations or create facade?
     private DartStations dartStations = new DartStations();
+    private DartCleaner cleaner = new TTideCleaner();
 
     @Override
     public void run() {
@@ -19,9 +24,10 @@ public class DartController implements Runnable {
         frame.setDartStations(darts);
         frame.addChangeStationAction(station -> {
             if (station != null) {
-                frame.setDartStates(dartStations.getDartStates(station));
+                List<DartState> states = dartStations.getDartStates(station);
+                cleaner.clear(station, states);
+                frame.setDartStates(states);
             }
         });
     }
-
 }

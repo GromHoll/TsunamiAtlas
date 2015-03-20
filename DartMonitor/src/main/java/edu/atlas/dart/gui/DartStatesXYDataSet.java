@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class DartStatesXYDataSet extends AbstractXYDataset {
 
+    private static final String[] SERIES_KEYS = { "DART Data"," Cleared data" };
+
     private List<DartState> states;
 
     public void setDartStates(@NonNull List<DartState> states) {
@@ -21,12 +23,12 @@ public class DartStatesXYDataSet extends AbstractXYDataset {
 
     @Override
     public int getSeriesCount() {
-        return 1;
+        return 2;
     }
 
     @Override
     public Comparable getSeriesKey(int series) {
-        return 0;
+        return SERIES_KEYS[series];
     }
 
     @Override
@@ -41,6 +43,11 @@ public class DartStatesXYDataSet extends AbstractXYDataset {
 
     @Override
     public Number getY(int series, int item) {
-        return states != null ? states.get(item).getHeight() : 0;
+        if (states == null) { return 0; }
+        switch (series) {
+            case 0:     return states.get(item).getHeight();
+            case 1:     return states.get(item).getClearedHeight();
+            default:    return 0;
+        }
     }
 }
