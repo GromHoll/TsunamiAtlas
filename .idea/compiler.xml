@@ -25,6 +25,7 @@
         <module name="DartMonitor" />
         <module name="earthquakeMonitor" />
         <module name="EarthquakeMonitor" />
+        <module name="TsunamiAtlas" />
         <module name="TsunamiAtlasCommon" />
       </profile>
     </annotationProcessing>
