@@ -15,25 +15,18 @@ import java.util.stream.Collectors;
 
 public class TTideCleaner implements DartCleaner {
 
-    private static final String MATLAB_EXECUTE_PATH = "G:\\Projects\\MATLAB\\t_tide3";
+    // TODO Move to properties
+    private static final String MATLAB_EXECUTE_PATH = "G:\\Projects\\Java\\TsunamiAtlas\\DartMonitor\\src\\main\\resources\\t_tide3";
+    private static final String MATLAB_LOCATION_PATH = "G:\\Programs\\MATLAB\\bin\\matlab.exe";
     private static final double DEFAULT_INTERVAL = 0.25;
-
-    private static final String TIDE_INFO_VAR = "tide";
-    private static final String OUT_ARRAY_VAR = "out";
 
     private static final String IN_ARRAY_VAR = "in";
     private static final String INTERVAL_VAR = "interval";
     private static final String START_TIME_VAR = "start";
     private static final String LATITUDE_VAR = "latitude";
 
-    private static final String COMMAND
-
-            = String.format("t_tide(%s, 'interval', %s, 'start', %s, 'latitude', %s)",
-            IN_ARRAY_VAR, INTERVAL_VAR, START_TIME_VAR, LATITUDE_VAR);
-
-//            = String.format("[%s, %s] = t_tide(%s, 'interval', %s, 'start', %s, 'latitude', %s)",
-//            TIDE_INFO_VAR, OUT_ARRAY_VAR,
-//            IN_ARRAY_VAR, INTERVAL_VAR, START_TIME_VAR, LATITUDE_VAR);
+    private static final String COMMAND = String.format("t_tide(%s, 'interval', %s, 'start', %s, 'latitude', %s)",
+                                                        IN_ARRAY_VAR, INTERVAL_VAR, START_TIME_VAR, LATITUDE_VAR);
 
     private MatlabProxy proxy = null;
 
@@ -43,8 +36,10 @@ public class TTideCleaner implements DartCleaner {
 
     private void connectToMatlab() {
         try {
-            MatlabProxyFactoryOptions options = new Builder().setMatlabStartingDirectory(new File(MATLAB_EXECUTE_PATH))
-                                                             .build();
+            MatlabProxyFactoryOptions options = new Builder()
+                    .setMatlabLocation(MATLAB_LOCATION_PATH)
+                    .setMatlabStartingDirectory(new File(MATLAB_EXECUTE_PATH))
+                    .build();
             MatlabProxyFactory factory = new MatlabProxyFactory(options);
             proxy = factory.getProxy();
         } catch (MatlabConnectionException exc) {
