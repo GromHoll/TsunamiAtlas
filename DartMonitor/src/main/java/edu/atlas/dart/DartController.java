@@ -26,9 +26,13 @@ public class DartController implements Runnable {
         frame.setDartStations(darts);
         frame.addChangeStationAction(station -> {
             if (station != null) {
-                List<DartState> states = dartStations.getDartStates(station);
-                cleaner.clear(station, states);
-                frame.setDartStates(states);
+                frame.setLoading();
+                Thread loadingThread = new Thread(() -> {
+                    List<DartState> states = dartStations.getDartStates(station);
+                    cleaner.clear(station, states);
+                    frame.setDartStates(states);
+                });
+                loadingThread.start();
             }
         });
         frame.addWindowListener(new WindowAdapter() {
