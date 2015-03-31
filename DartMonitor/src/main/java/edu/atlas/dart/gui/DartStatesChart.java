@@ -21,6 +21,12 @@ public class DartStatesChart extends JPanel {
         JFreeChart chart = ChartFactory.createTimeSeriesChart("Dart's Data", "Time", "Height",
                                                               dataSet, false, true, false);
         ChartPanel chartPanel = new ChartPanel(chart, true);
+        chartPanel.setMinimumDrawHeight(400);
+        chartPanel.setMaximumDrawHeight(2000);
+        chartPanel.setMinimumDrawWidth(400);
+        chartPanel.setMaximumDrawWidth(2000);
+
+        this.setLayout(new BorderLayout());
         this.add(chartPanel, BorderLayout.CENTER);
     }
 

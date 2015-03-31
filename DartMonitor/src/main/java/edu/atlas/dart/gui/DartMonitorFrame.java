@@ -14,18 +14,9 @@ import java.util.List;
  * @author GromHoll
  * @since  26.02.2015
  */
-public class DartMonitorFrame extends JFrame implements ServerListener {
-
-    public static final String AVAILABLE = "Available";
-    public static final String NOT_AVAILABLE = "Not available";
-
-    private Icon red_icon;
-    private Icon green_icon;
+public class DartMonitorFrame extends JFrame {
 
     private DartStatesChart dartStatesChart = new DartStatesChart();
-    private JLabel lastUpdateDate;
-    private JLabel statusImage;
-    private JLabel statusText;
     private JComboBox<DartStation> stationsComboBox;
     private JPanel chartPanel;
     private JPanel mainPanel;
@@ -36,38 +27,12 @@ public class DartMonitorFrame extends JFrame implements ServerListener {
     }
 
     private void init() {
-        red_icon   = loadIcon("/edu.atlas/images/red.png");
-        green_icon = loadIcon("/edu.atlas/images/green.png");
-
         this.setContentPane(mainPanel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        chartPanel.add(dartStatesChart, BorderLayout.CENTER);
+        this.chartPanel.add(dartStatesChart, BorderLayout.CENTER);
 
         this.pack();
         this.setVisible(true);
-    }
-
-    private Icon loadIcon(String path) {
-        try {
-            return new ImageIcon(getClass().getResource(path));
-        } catch(Exception exc) {
-            System.out.println("[ERROR] Image " + path + " not found.");
-            return null;
-        }
-    }
-
-    private void setServerState(Icon icon, String info) {
-        statusImage.setIcon(icon);
-        statusText.setText(info);
-    }
-
-    @Override
-    public void setAvailable(boolean isAvailable) {
-        if(isAvailable) {
-            setServerState(green_icon, AVAILABLE);
-        } else {
-            setServerState(red_icon, NOT_AVAILABLE);
-        }
     }
 
     public void setDartStations(Collection<DartStation> stations) {
