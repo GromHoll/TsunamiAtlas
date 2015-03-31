@@ -1,6 +1,5 @@
 package edu.atlas.dart.gui;
 
-import edu.atlas.common.listener.ServerListener;
 import edu.atlas.dart.entity.DartState;
 import edu.atlas.dart.entity.DartStation;
 import lombok.NonNull;
@@ -28,7 +27,7 @@ public class DartMonitorFrame extends JFrame {
 
     private void init() {
         this.setContentPane(mainPanel);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.chartPanel.add(dartStatesChart, BorderLayout.CENTER);
 
         this.pack();

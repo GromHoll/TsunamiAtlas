@@ -48,6 +48,17 @@ public class TTideCleaner implements DartCleaner {
     }
 
     @Override
+    public void dispose() {
+        if (proxy != null) {
+            try {
+                proxy.exit();
+            } catch (MatlabInvocationException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public Collection<DartState> clear(@NonNull DartStation station, @NonNull List<DartState> states) {
         try {
             return startClearing(station, states);
@@ -94,7 +105,10 @@ public class TTideCleaner implements DartCleaner {
         return states.stream().mapToDouble(DartState::getHeight).toArray();
     }
 
-    /* [year,month,day,hour,min,sec] */
+    /*
+     * Transform date from DartState to array
+     * [year, month, day, hour, min, sec]
+     */
     private double[] getStartDate(DartState dartState) {
         Calendar date = dartState.getDate();
         return new double[] {date.get(Calendar.YEAR) - 1900,

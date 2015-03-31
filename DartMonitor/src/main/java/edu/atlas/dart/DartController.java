@@ -7,6 +7,8 @@ import edu.atlas.dart.entity.DartStation;
 import edu.atlas.dart.entity.DartStations;
 import edu.atlas.dart.gui.DartMonitorFrame;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class DartController implements Runnable {
@@ -27,6 +29,14 @@ public class DartController implements Runnable {
                 List<DartState> states = dartStations.getDartStates(station);
                 cleaner.clear(station, states);
                 frame.setDartStates(states);
+            }
+        });
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cleaner.dispose();
+                frame.dispose();
+                System.exit(0);
             }
         });
     }
