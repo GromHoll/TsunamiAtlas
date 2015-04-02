@@ -5,19 +5,21 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-/**
- * @author GromHoll
- * @since 27.02.2015
- */
-public class DartStatesChart extends JPanel {
+public class DartStatesPanel {
+    private JTabbedPane tabbedPane;
+    private JPanel mainPanel;
+    private JPanel chartStatesPanel;
+    private JPanel tablePanel;
+    private JTable dartStatesTable;
 
     private DartStatesXYDataSet dataSet = new DartStatesXYDataSet();
+    private DataStatesTableModel tableModel = new DataStatesTableModel();
 
-    public DartStatesChart() {
+    public DartStatesPanel() {
         JFreeChart chart = ChartFactory.createTimeSeriesChart("Dart's Data", "Time", "Height",
                                                               dataSet, false, true, false);
         ChartPanel chartPanel = new ChartPanel(chart, true);
@@ -26,11 +28,18 @@ public class DartStatesChart extends JPanel {
         chartPanel.setMinimumDrawWidth(400);
         chartPanel.setMaximumDrawWidth(2000);
 
-        this.setLayout(new BorderLayout());
-        this.add(chartPanel, BorderLayout.CENTER);
+        chartStatesPanel.add(chartPanel, BorderLayout.CENTER);
+        dartStatesTable.setModel(tableModel);
     }
+
+    public JPanel getPanel() {
+        return mainPanel;
+    }
+
 
     public void setDartStates(List<DartState> states) {
         dataSet.setDartStates(states);
+        tableModel.setDartStates(states);
     }
+
 }

@@ -41,7 +41,7 @@ public class DartStatesParser implements DataParser<DartState, List<String>> {
     }
     
     private Calendar parseDate(String tokens[]) {
-       return new GregorianCalendar(parseInt(tokens[YEAR]) + YEARS_SHIFT,
+       return new GregorianCalendar(parseInt(tokens[YEAR]),
                                     parseInt(tokens[MONTH]), parseInt(tokens[DAY]),
                                     parseInt(tokens[HOURS]), parseInt(tokens[MINUTES]), parseInt(tokens[SECONDS]));
     }

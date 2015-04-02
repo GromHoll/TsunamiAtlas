@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class DartMonitorFrame extends JFrame {
 
-    private DartStatesChart dartStatesChart = new DartStatesChart();
+    private DartStatesPanel dartStatesChart = new DartStatesPanel();
     private JComboBox<DartStation> stationsComboBox;
     private JPanel chartPanel;
     private JPanel mainPanel;
@@ -67,7 +67,7 @@ public class DartMonitorFrame extends JFrame {
         stationsComboBox.setEnabled(true);
         chartPanel.removeAll();
         dartStatesChart.setDartStates(states);
-        chartPanel.add(dartStatesChart, BorderLayout.CENTER);
+        chartPanel.add(dartStatesChart.getPanel(), BorderLayout.CENTER);
         revalidate();
         repaint();
     }
