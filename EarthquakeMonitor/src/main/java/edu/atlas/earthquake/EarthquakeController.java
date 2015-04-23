@@ -12,10 +12,10 @@ import edu.atlas.earthquake.data.EarthquakeGeoJsonParser;
 import edu.atlas.earthquake.entity.Earthquake;
 import edu.atlas.earthquake.gui.ConsoleMonitor;
 import edu.atlas.earthquake.gui.EarthquakeMonitorFrame;
-import edu.atlas.earthquake.out.EarthquakeFileWriter;
-import edu.atlas.earthquake.out.EmailSender;
-import edu.atlas.earthquake.out.Sms24x7Sender;
-import edu.atlas.earthquake.out.format.OutFormat;
+import edu.atlas.earthquake.output.EarthquakeFileWriter;
+import edu.atlas.earthquake.output.EmailSender;
+import edu.atlas.earthquake.output.Sms24x7Sender;
+import edu.atlas.earthquake.output.format.OutFormat;
 import edu.atlas.earthquake.validator.Validator;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 

@@ -1,11 +1,11 @@
-package edu.atlas.earthquake.out;
+package edu.atlas.earthquake.output;
 
 import edu.atlas.common.config.Configuration;
 import edu.atlas.common.config.SystemConfiguration;
 import edu.atlas.common.data.DataChangedListener;
 import edu.atlas.common.data.event.DataChangedEvent;
 import edu.atlas.earthquake.entity.Earthquake;
-import edu.atlas.earthquake.out.format.OutFormat;
+import edu.atlas.earthquake.output.format.OutFormat;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

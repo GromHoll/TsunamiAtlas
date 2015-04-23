@@ -1,11 +1,11 @@
-package edu.atlas.earthquake.out.format;
+package edu.atlas.earthquake.output.format;
 
 import edu.atlas.common.data.impl.FileReader;
 import edu.atlas.earthquake.entity.Earthquake;
-import edu.atlas.earthquake.out.format.node.EarthquakeOutNode;
-import edu.atlas.earthquake.out.format.node.NewLineOutNode;
-import edu.atlas.earthquake.out.format.node.OutNode;
-import edu.atlas.earthquake.out.format.node.StringOutNode;
+import edu.atlas.earthquake.output.format.node.EarthquakeOutNode;
+import edu.atlas.earthquake.output.format.node.NewLineOutNode;
+import edu.atlas.earthquake.output.format.node.OutNode;
+import edu.atlas.earthquake.output.format.node.StringOutNode;
 
 import java.io.IOException;
 import java.util.ArrayList;

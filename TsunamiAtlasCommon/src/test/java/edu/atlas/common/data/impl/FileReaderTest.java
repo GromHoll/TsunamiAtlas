@@ -6,7 +6,7 @@ import java.util.List;
 
 public class FileReaderTest extends TestCase {
 
-    private static final String TEST_FILE_NAME = "./TsunamiAtlasCommon/src/test/resources/testReaderFile.txt";
+    private static final String TEST_FILE_NAME = "./src/test/resources/testReaderFile.txt";
 
     private static final String FIRST_ROW = "First row";
     private static final String SECOND_ROW = "Second row";
@@ -17,6 +17,7 @@ public class FileReaderTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        System.out.println(System.getProperty("user.dir"));
         reader = new FileReader(TEST_FILE_NAME);
     }
 

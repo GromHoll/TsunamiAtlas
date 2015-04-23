@@ -1,4 +1,4 @@
-package edu.atlas.earthquake.out.sms24x7;
+package edu.atlas.earthquake.output.sms24x7;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

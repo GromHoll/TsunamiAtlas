@@ -1,4 +1,4 @@
-package edu.atlas.earthquake.out.format.node;
+package edu.atlas.earthquake.output.format.node;
 
 import edu.atlas.earthquake.entity.Earthquake;
 

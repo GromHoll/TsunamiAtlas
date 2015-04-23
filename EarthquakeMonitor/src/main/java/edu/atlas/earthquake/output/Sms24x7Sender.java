@@ -1,10 +1,10 @@
-package edu.atlas.earthquake.out;
+package edu.atlas.earthquake.output;
 
 import edu.atlas.common.data.DataChangedListener;
 import edu.atlas.common.data.event.DataChangedEvent;
 import edu.atlas.earthquake.entity.Earthquake;
-import edu.atlas.earthquake.out.format.OutFormat;
-import edu.atlas.earthquake.out.sms24x7.SMS24x7Impl;
+import edu.atlas.earthquake.output.format.OutFormat;
+import edu.atlas.earthquake.output.sms24x7.SMS24x7Impl;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;

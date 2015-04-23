@@ -1,4 +1,4 @@
-package edu.atlas.earthquake.out.sms24x7;
+package edu.atlas.earthquake.output.sms24x7;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -7,7 +7,7 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 
 import java.io.IOException;
 
-import static edu.atlas.earthquake.out.sms24x7.Util.encode;
+import static edu.atlas.earthquake.output.sms24x7.Util.encode;
 
 public class SMS24x7Impl {
     private static final String API_URL = "http://api.sms24x7.ru/";
