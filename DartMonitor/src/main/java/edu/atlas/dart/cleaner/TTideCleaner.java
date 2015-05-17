@@ -4,10 +4,12 @@ package edu.atlas.dart.cleaner;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import edu.atlas.dart.entity.DartState;
+import edu.atlas.dart.entity.DartStateDelta;
 import edu.atlas.dart.entity.DartStation;
 import edu.t_tide.TTide;
 import lombok.NonNull;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +41,7 @@ public class TTideCleaner implements DartCleaner {
     }
 
     @Override
-    public Collection<DartState> clear(@NonNull DartStation station, @NonNull List<DartState> states) {
+    public Collection<DartStateDelta> clear(@NonNull DartStation station, @NonNull List<DartState> states) {
         try {
             return startClearing(station, states);
         } catch (MWException e) {
@@ -48,7 +50,7 @@ public class TTideCleaner implements DartCleaner {
         return null;
     }
 
-    private Collection<DartState> startClearing(DartStation station, List<DartState> states) throws MWException {
+    private Collection<DartStateDelta> startClearing(DartStation station, List<DartState> states) throws MWException {
 
         List<DartState> filteredStates = filterDartStates(states);
 
@@ -60,12 +62,13 @@ public class TTideCleaner implements DartCleaner {
         Object[] res = tTide.t_tide(2, heights, INTERVAL_VAR, interval, START_TIME_VAR, date, LATITUDE_VAR, station.getLatitude());
         double[] heightDeltas = ((MWNumericArray) res[1]).getDoubleData();
 
+        List<DartStateDelta> result = new ArrayList<>();
         for (int i = 0; i < filteredStates.size(); i++) {
             DartState state = filteredStates.get(i);
-            state.setClearedHeightDelta(heightDeltas[i]);
+            result.add(new DartStateDelta(state, heightDeltas[i]));
         }
 
-        return states;
+        return result;
     }
 
     private List<DartState> filterDartStates(List<DartState> states) {

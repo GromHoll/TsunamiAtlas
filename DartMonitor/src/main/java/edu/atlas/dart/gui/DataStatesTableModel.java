@@ -4,7 +4,9 @@ import edu.atlas.dart.entity.DartState;
 
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class DataStatesTableModel extends DefaultTableModel {
 
@@ -23,14 +25,7 @@ public class DataStatesTableModel extends DefaultTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        switch(columnIndex) {
-            case 0:
-                return String.class;
-            case 1: case 2: case 3:
-                return Double.class;
-            default:
-                return String.class;
-        }
+        return String.class;
     }
 
     @Override
@@ -64,7 +59,7 @@ public class DataStatesTableModel extends DefaultTableModel {
             case 2:
                 return dartState.getClearedHeight();
             case 3:
-                return dartState.getClearedHeightDelta();
+                return dartState.getDelta();
         }
         return "";
     }
