@@ -1,6 +1,7 @@
 package edu.atlas.dart.data;
 
 
+import com.google.common.collect.Lists;
 import edu.atlas.common.data.DataParser;
 import edu.atlas.dart.entity.DartState;
 
@@ -26,7 +27,8 @@ public class DartStatesParser implements DataParser<DartState, List<String>> {
     @Override
     public List<DartState> parseData(List<String> data) {
         Collection<String> dartData = getStatesDataWithoutHeader(data);
-        return dartData.stream().map(this::parseState).collect(Collectors.toList());
+        List<DartState> originalOrder = dartData.stream().map(this::parseState).collect(Collectors.toList());
+        return Lists.reverse(originalOrder);
     }
 
     private Collection<String> getStatesDataWithoutHeader(List<String> data) {

@@ -1,13 +1,13 @@
 package edu.atlas.dart.cleaner;
 
 
+import com.mathworks.toolbox.javabuilder.MWException;
+import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import edu.atlas.dart.entity.DartState;
 import edu.atlas.dart.entity.DartStation;
+import edu.t_tide.TTide;
 import lombok.NonNull;
-import matlabcontrol.*;
-import matlabcontrol.MatlabProxyFactoryOptions.Builder;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 public class TTideCleaner implements DartCleaner {
 
     // TODO Move to properties
-    private static final String MATLAB_EXECUTE_PATH = "G:\\Projects\\Java\\TsunamiAtlas\\DartMonitor\\src\\main\\resources\\t_tide3";
-    private static final String MATLAB_LOCATION_PATH = "G:\\Programs\\MATLAB\\bin\\matlab.exe";
     private static final double DEFAULT_INTERVAL = 0.25;
 
     private static final String IN_ARRAY_VAR = "in";
@@ -25,50 +23,32 @@ public class TTideCleaner implements DartCleaner {
     private static final String START_TIME_VAR = "start";
     private static final String LATITUDE_VAR = "latitude";
 
-    private static final String COMMAND = String.format("t_tide(%s, 'interval', %s, 'start', %s, 'latitude', %s)",
-                                                        IN_ARRAY_VAR, INTERVAL_VAR, START_TIME_VAR, LATITUDE_VAR);
-
-    private MatlabProxy proxy = null;
+    private TTide tTide;
 
     public TTideCleaner() {
-        connectToMatlab();
-    }
-
-    private void connectToMatlab() {
         try {
-            MatlabProxyFactoryOptions options = new Builder()
-                    .setMatlabLocation(MATLAB_LOCATION_PATH)
-                    .setMatlabStartingDirectory(new File(MATLAB_EXECUTE_PATH))
-                    .build();
-            MatlabProxyFactory factory = new MatlabProxyFactory(options);
-            proxy = factory.getProxy();
-        } catch (MatlabConnectionException exc) {
-            throw new RuntimeException("MATLAB cannot be started. Check it and try again", exc);
+            tTide = new TTide();
+        } catch (MWException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void dispose() {
-        if (proxy != null) {
-            try {
-                proxy.exit();
-            } catch (MatlabInvocationException e) {
-                e.printStackTrace();
-            }
-        }
+        tTide.dispose();
     }
 
     @Override
     public Collection<DartState> clear(@NonNull DartStation station, @NonNull List<DartState> states) {
         try {
             return startClearing(station, states);
-        } catch (MatlabInvocationException exc) {
-            throw new RuntimeException("Error in MATLAB", exc);
+        } catch (MWException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
-    private Collection<DartState> startClearing(DartStation station, List<DartState> states)
-            throws MatlabInvocationException {
+    private Collection<DartState> startClearing(DartStation station, List<DartState> states) throws MWException {
 
         List<DartState> filteredStates = filterDartStates(states);
 
@@ -77,14 +57,8 @@ public class TTideCleaner implements DartCleaner {
         double[] heights = getHeights(filteredStates);
         double[] date = getStartDate(filteredStates.get(0));
 
-        proxy.setVariable(IN_ARRAY_VAR, heights);
-        proxy.setVariable(INTERVAL_VAR, interval);
-        proxy.setVariable(START_TIME_VAR, date);
-        proxy.setVariable(LATITUDE_VAR, station.getLatitude());
-
-        /* Run matlab code*/
-        Object[] returned = proxy.returningEval(COMMAND, 2);
-        double[] heightDeltas = (double[]) returned[1];
+        Object[] res = tTide.t_tide(2, heights, INTERVAL_VAR, interval, START_TIME_VAR, date, LATITUDE_VAR, station.getLatitude());
+        double[] heightDeltas = ((MWNumericArray) res[1]).getDoubleData();
 
         for (int i = 0; i < filteredStates.size(); i++) {
             DartState state = filteredStates.get(i);
@@ -95,10 +69,13 @@ public class TTideCleaner implements DartCleaner {
     }
 
     private List<DartState> filterDartStates(List<DartState> states) {
-        // TODO cut subset of all data for performance
         /* By default interval between dart states - 15 minutes*/
-        return states.stream().filter(state -> state.getDate().get(Calendar.MINUTE) % 15 == 0)
+        List<DartState> filtered = states.stream().filter(state -> state.getDate().get(Calendar.MINUTE) % 15 == 0)
                 .collect(Collectors.toList());
+
+
+
+        return filtered.subList(filtered.size() - 500, filtered.size() - 1);
     }
 
     private double[] getHeights(Collection<DartState> states) {

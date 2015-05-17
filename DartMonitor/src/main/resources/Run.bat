@@ -1,0 +1,1 @@
+java -cp "DartMonitor.jar;./libs/*" edu.atlas.dart.Entry

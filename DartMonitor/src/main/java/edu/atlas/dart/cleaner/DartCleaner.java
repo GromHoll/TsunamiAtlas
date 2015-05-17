@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface DartCleaner {
 
-    public Collection<DartState> clear(DartStation station, List<DartState> states);
-    public void dispose();
+    Collection<DartState> clear(DartStation station, List<DartState> states);
+    void dispose();
 
 }
