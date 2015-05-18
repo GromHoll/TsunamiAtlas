@@ -1,13 +1,16 @@
 package edu.atlas.dart.gui;
 
 import edu.atlas.dart.entity.DartState;
+import edu.atlas.dart.entity.DartStateDelta;
 import edu.atlas.dart.entity.DartStation;
 import lombok.NonNull;
 
-import javax.swing.*;
-import java.awt.*;
-import java.net.MalformedURLException;
-import java.net.URL;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Label;
 import java.util.Collection;
 import java.util.List;
 
@@ -63,10 +66,10 @@ public class DartMonitorFrame extends JFrame {
         repaint();
     }
 
-    public void setDartStates(List<DartState> states) {
+    public void setDartStates(List<DartState> states, List<DartStateDelta> delta) {
         stationsComboBox.setEnabled(true);
         chartPanel.removeAll();
-        dartStatesChart.setDartStates(states);
+        dartStatesChart.setDartStates(states, delta);
         chartPanel.add(dartStatesChart.getPanel(), BorderLayout.CENTER);
         revalidate();
         repaint();

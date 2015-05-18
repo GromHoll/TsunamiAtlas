@@ -3,6 +3,7 @@ package edu.atlas.dart;
 import edu.atlas.dart.cleaner.DartCleaner;
 import edu.atlas.dart.cleaner.TTideCleaner;
 import edu.atlas.dart.entity.DartState;
+import edu.atlas.dart.entity.DartStateDelta;
 import edu.atlas.dart.entity.DartStation;
 import edu.atlas.dart.entity.DartStations;
 import edu.atlas.dart.gui.DartMonitorFrame;
@@ -29,8 +30,8 @@ public class DartController implements Runnable {
                 frame.setLoading();
                 Thread loadingThread = new Thread(() -> {
                     List<DartState> states = dartStations.getDartStates(station);
-                    cleaner.clear(station, states);
-                    frame.setDartStates(states);
+                    List<DartStateDelta> delta = cleaner.clear(station, states);
+                    frame.setDartStates(states, delta);
                 });
                 loadingThread.start();
             }

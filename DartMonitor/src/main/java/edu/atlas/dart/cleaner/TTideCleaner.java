@@ -20,7 +20,6 @@ public class TTideCleaner implements DartCleaner {
     // TODO Move to properties
     private static final double DEFAULT_INTERVAL = 0.25;
 
-    private static final String IN_ARRAY_VAR = "in";
     private static final String INTERVAL_VAR = "interval";
     private static final String START_TIME_VAR = "start";
     private static final String LATITUDE_VAR = "latitude";
@@ -41,7 +40,7 @@ public class TTideCleaner implements DartCleaner {
     }
 
     @Override
-    public Collection<DartStateDelta> clear(@NonNull DartStation station, @NonNull List<DartState> states) {
+    public List<DartStateDelta> clear(@NonNull DartStation station, @NonNull List<DartState> states) {
         try {
             return startClearing(station, states);
         } catch (MWException e) {
@@ -50,7 +49,7 @@ public class TTideCleaner implements DartCleaner {
         return null;
     }
 
-    private Collection<DartStateDelta> startClearing(DartStation station, List<DartState> states) throws MWException {
+    private List<DartStateDelta> startClearing(DartStation station, List<DartState> states) throws MWException {
 
         List<DartState> filteredStates = filterDartStates(states);
 
@@ -65,7 +64,9 @@ public class TTideCleaner implements DartCleaner {
         List<DartStateDelta> result = new ArrayList<>();
         for (int i = 0; i < filteredStates.size(); i++) {
             DartState state = filteredStates.get(i);
-            result.add(new DartStateDelta(state, heightDeltas[i]));
+            if (state != null) {
+                result.add(new DartStateDelta(state, heightDeltas[i]));
+            }
         }
 
         return result;
@@ -73,16 +74,37 @@ public class TTideCleaner implements DartCleaner {
 
     private List<DartState> filterDartStates(List<DartState> states) {
         /* By default interval between dart states - 15 minutes*/
-        List<DartState> filtered = states.stream().filter(state -> state.getDate().get(Calendar.MINUTE) % 15 == 0)
+        List<DartState> filtered = states.stream().filter(state -> state.getDate().get(Calendar.MINUTE)%15 == 0
+                                                                && state.getDate().get(Calendar.SECOND) == 0
+                                                                && state.getDate().get(Calendar.MILLISECOND) == 0)
                 .collect(Collectors.toList());
 
+        if (!filtered.isEmpty()) {
+            List<DartState> result = new ArrayList<>(filtered.size());
 
+            result.add(filtered.get(0));
+            for (int i = 1; i < filtered.size(); i++) {
+                long previousDate = filtered.get(i - 1).getDate().getTimeInMillis();
+                long currentDate = filtered.get(i).getDate().getTimeInMillis();
 
-        return filtered.subList(filtered.size() - 500, filtered.size() - 1);
+                long shift = 15*1000*60;
+                while (previousDate + shift < currentDate) {
+                    result.add(null);
+                    shift += 15*1000*60;
+                }
+                if (previousDate < currentDate) {
+                    result.add(filtered.get(i));
+                }
+            }
+
+            return result;
+        }
+
+        return filtered;
     }
 
     private double[] getHeights(Collection<DartState> states) {
-        return states.stream().mapToDouble(DartState::getHeight).toArray();
+        return states.stream().mapToDouble(ds -> ds == null ? Double.NaN : ds.getHeight()).toArray();
     }
 
     /*
