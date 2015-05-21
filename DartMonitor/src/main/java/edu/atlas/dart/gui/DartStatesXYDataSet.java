@@ -26,7 +26,7 @@ public class DartStatesXYDataSet extends AbstractXYDataset {
 
     @Override
     public int getSeriesCount() {
-        return 2;
+        return SERIES_KEYS.length;
     }
 
     @Override
