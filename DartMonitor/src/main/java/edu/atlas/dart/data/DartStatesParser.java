@@ -17,7 +17,6 @@ public class DartStatesParser implements DataParser<DartState, List<String>> {
     private static final String SPLIT_SYMBOL = " ";
 
     private static final int YEAR = 0;
-    private static final int YEARS_SHIFT = 1900;
     private static final int MONTH = 1;
     private static final int DAY = 2;
     private static final int HOURS = 3;
@@ -44,7 +43,8 @@ public class DartStatesParser implements DataParser<DartState, List<String>> {
     
     private Calendar parseDate(String tokens[]) {
        return new GregorianCalendar(parseInt(tokens[YEAR]),
-                                    parseInt(tokens[MONTH]), parseInt(tokens[DAY]),
+                                    parseInt(tokens[MONTH]) - 1, /* Because months have 0-based order */
+                                    parseInt(tokens[DAY]),
                                     parseInt(tokens[HOURS]), parseInt(tokens[MINUTES]), parseInt(tokens[SECONDS]));
     }
 

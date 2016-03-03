@@ -113,8 +113,8 @@ public class TTideCleaner implements DartCleaner {
      */
     private double[] getStartDate(DartState dartState) {
         Calendar date = dartState.getDate();
-        return new double[] {date.get(Calendar.YEAR) - 1900,
-                             date.get(Calendar.MONTH),
+        return new double[] {date.get(Calendar.YEAR),
+                             date.get(Calendar.MONTH) + 1, /* Because months have 0-based order */
                              date.get(Calendar.DAY_OF_MONTH),
                              date.get(Calendar.HOUR_OF_DAY),
                              date.get(Calendar.MINUTE),

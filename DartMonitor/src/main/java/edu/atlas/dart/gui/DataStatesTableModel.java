@@ -11,7 +11,7 @@ import java.util.List;
 public class DataStatesTableModel extends DefaultTableModel {
 
     private List<DartState> dartStates = new ArrayList<>();
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
     public static final String columnNames[] = {"Date", "Real height", "Cleared Height", "Delta Height"};
 
